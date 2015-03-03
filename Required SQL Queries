@@ -1,0 +1,71 @@
+In addition to writing the CREATE TABLEs, the other thing Kangwei and I did over break was look over the list of required user interface functions--things the project description requires us to implement--and write a generic version of the SQL query to do such a thing.
+
+There were some things we weren't able to do, that had to do with admin priviliges or logging in that we weren't sure how to implement, but this is what we have so far:
+
+(note that the ___WORDS__ represent runtime variables that would be filled in by the server before being passed to the database)
+
+
+* Buy game:
+
+INSERT INTO purchased(email,name) VALUES (___user-email_____, _____game-name___);
+
+
+* Review game:
+
+UPDATE purchased p SET p.review = _____user-review__ WHERE p.name = ____game-name___ AND p.email = ___user-email___;
+
+
+* Rate game:
+
+BEGIN{
+
+  UPDATE purchased p SET p.rating = __user-rating__ WHERE p.name=___game-name___ AND p.email=___user-email___;
+  
+  UPDATE app a SET a.rating = ((a.rating * a.numberOfRatings)+ __user-rating__) / (a.numberOfRatings+1) WHERE a.name=__game-name__;
+  
+  UPDATE app a SET a.numberOfRatings = a.numberOfRatings+1 WHERE a.name=__game-name__;
+  
+}END 
+
+//Note that this may cause problems with how transactions update, if the three parts are all committed at the same time then the value of a.numberOfRatings may not be correct for the second part. May need to pull the third part out of the block and make it a seperate transaction. Will see.
+
+
+
+* Return a rental:
+
+DELETE * FROM rent r WHERE r.email=__user-email__ AND r.name=__game-name__;
+
+
+
+* Search by name:
+
+SELECT * FROM app a WHERE a.name=__search-input__;
+
+
+* Search by genre:
+
+SELECT a.* FROM app a, belong b WHERE b.type =__search-input__ AND b.name=a.name;
+
+
+* Search by device:
+
+SELECT a.* FROM app a WHERE a.device=__search-input__;
+
+
+* Search by rating:
+
+SELECT a.* FROM app a WHERE a.rating>=__search-input__ ORDER BY a.rating DESC;
+
+* Search by release date:
+
+SELECT a.* FROM app a WHERE a.releaseDate>=__search-input ORDER BY a.releaseDate DESC;
+
+
+
+
+
+_______________________
+
+Also, to display a list of genres a game is in, it's:
+
+SELECT b.genre FROM belong b WHERE b.name=__game-name__;
