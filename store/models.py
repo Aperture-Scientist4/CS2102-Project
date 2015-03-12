@@ -21,15 +21,17 @@ class User(models.Model):
 	email = models.CharField(max_length=128, primary_key=True)
 	password = models.CharField(max_length=128)
 
-class purchase(models.Model):
-	email = models.ForeignKey(User, primary_key=True)
-	appid = models.ForeignKey(App, primary_key=True)
+class Purchased(models.Model):
+	order_id = models.CharField(max_length=32, primary_key=True)
+	email = models.ManyToManyField('User')
+	appid = models.ManyToManyField('App')
 	rating = models.PositiveIntegerField(null=True)
 	review = models.CharField(max_length=1024, null=True)
 
-class rent(models.Model):
-	email = models.ForeignKey(User, primary_key=True)
-	appid = models.ForeignKey(App, primary_key=True)
+class Rent(models.Model):
+	order_id = models.CharField(max_length=32, primary_key=True)
+	email = models.ManyToManyField('User')
+	appid = models.ManyToManyField('App')
 	rating = models.PositiveIntegerField(null=True)
 	review = models.CharField(max_length=1024, null=True)
 	expire_date = models.DateField()
