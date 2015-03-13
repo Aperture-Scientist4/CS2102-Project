@@ -1,0 +1,5 @@
+CREATE VIEW purchaseRatings AS SELECT a1.name, avg(p1.rating) FROM app a1, purchased p1 WHERE a1.appid=p1.appid GROUP BY a1.appid ORDER BY avg(p1.rating) DESC;
+CREATE VIEW movies AS SELECT a1.name FROM app a1 WHERE a1.genre='movie';
+CREATE VIEW TVShows AS SELECT a1.name FROM app a1 WHERE a1.genre='TV';
+CREATE VIEW games AS SELECT a1.name FROM app a1 WHERE a1.genre='game';
+CREATE VIEW otherApps AS SELECT a1.name FROM app a1 WHERE a1.genre='app';
