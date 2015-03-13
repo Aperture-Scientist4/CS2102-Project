@@ -4,7 +4,7 @@ CS2102-Project
 If you want to get the database up and running on your own computer, here's what you do:
 
 1. Download the SQLCode file, move everything in it (not the folder itself, all the files in it) to the folder where SQLite3.exe is on your computer (or whatever your preferred SQL program is).
-2. Run the SQL command ".read createDatabase.txt"
+2. Run the SQL command ".read createDatabase.txt"    (Note the lack of semicolon. It doesn't work if you put a semicolon.)
 
 
 If you want to get the database off your computer, run the command: ".read cleanSlate.txt"
