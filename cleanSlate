@@ -1,0 +1,2 @@
+.read noTables.txt
+.read noViews.txt
