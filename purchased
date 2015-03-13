@@ -1,0 +1,4 @@
+INSERT INTO purchased VALUES('averagejoe@yahoomail.com', 34235, '3.0', 'Ehh, It’s okay.');
+INSERT INTO purchased VALUES('gamerguy@gmail.com', 34235, '4.0', 'The sublime graphics of this Uphone game are only matched by it’s incredible gameplay and mindblowing soundtrack. I give it four stars instead of five because it was released on the Uphone instead of the obviously superior Cyborg. I refuse to support the Uphone on principle. Otherwise great game.');
+INSERT INTO purchased VALUES('jshep@alliancemail.net', 34235, '5.0', 'Im Commander Shepard and this is my favorite game on the App Store.');
+INSERT INTO purchased VALUES('scienceguy@gmail.com', 27384, '1.0', 'Totally Unrealistic. Everyone knows that Trilobites are composed of 36 body sections, not 34 as depicted in this movie. I cannot recommend this movie to anyone.');
