@@ -1,0 +1,7 @@
+.read projectDDL.txt
+.read app.txt
+.read user.txt
+.read admin.txt
+.read purchased.txt
+.read rent.txt
+.read views.txt
