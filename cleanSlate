@@ -1,0 +1,5 @@
+drop table user;
+drop table app;
+drop table admin;
+drop table purchased;
+drop table rent;
