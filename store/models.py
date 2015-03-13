@@ -1,6 +1,4 @@
 from django.db import models
-from django.contrib.auth.models import User
-
 class App(models.Model):
 	GENRE_CHOICES = (
 		('G','Game'),
@@ -18,16 +16,25 @@ class App(models.Model):
 	release_date = models.DateField()
 	genre = models.CharField(max_length=1, choices=GENRE_CHOICES)
 
+class Customer(models.Model):
+	email = models.CharField(max_length=128, primary_key=True)
+	password = models.CharField(max_length=128)
+	def __str__(self):
+		return self.email
+	def check_password(self, password):
+		return self.password == password
+
+
 class Purchased(models.Model):
 	order_id = models.CharField(max_length=32, primary_key=True)
-	email = models.ManyToManyField(User)
+	email = models.ManyToManyField(Customer)
 	appid = models.ManyToManyField(App)
 	rating = models.PositiveIntegerField(null=True)
 	review = models.CharField(max_length=1024, null=True)
 
 class Rent(models.Model):
 	order_id = models.CharField(max_length=32, primary_key=True)
-	email = models.ManyToManyField(User)
+	email = models.ManyToManyField(Customer)
 	appid = models.ManyToManyField(App)
 	rating = models.PositiveIntegerField(null=True)
 	review = models.CharField(max_length=1024, null=True)
