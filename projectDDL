@@ -1,0 +1,44 @@
+CREATE TABLE app(
+	appid Integer PRIMARY KEY,
+	name varchar(32) NOT NULL,
+	icon varchar(32),
+	purchase_price decimal(5,2) NOT NULL,
+	rent_price decimal(5,2) Default NULL,
+	description varchar(256) NOT NULL,
+	device varchar(32) NOT NULL,
+	releaseDate DATE NOT NULL,
+	genre varchar(32) NOT NULL,
+	CHECK (purchase_price>=0),
+	CHECK (genre='movie' OR genre='app' OR genre='TV' or genre='game')
+);
+
+CREATE TABLE user(
+	email varchar(128) PRIMARY KEY,
+	password varchar(128) NOT NULL
+);
+
+CREATE TABLE admin(
+	id VARCHAR(64) PRIMARY KEY,
+	password VARCHAR(32) NOT NULL
+);
+		
+CREATE TABLE purchased(
+	email varchar(64) REFERENCES user(email),
+	appid Integer REFERENCES app(appid),
+	rating DECIMAL(2,1),
+	review varchar(1024),
+	CHECK (rating<=5 AND rating>=0),
+	PRIMARY KEY (email, appid)
+);
+
+CREATE TABLE rent(
+	email varchar(64) REFERENCES user(email),
+	appid Integer REFERENCES app(appid),
+	rating DECIMAL(2,1),
+	review varchar(1024),
+	expire_date DATE NOT NULL,
+	CHECK (rating<=5 AND rating>=0),
+	PRIMARY KEY (email, appid)
+);
+
+
