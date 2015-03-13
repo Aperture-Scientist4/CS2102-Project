@@ -1,0 +1,5 @@
+DROP VIEW purchaseRatings;
+DROP VIEW movies;
+DROP VIEW games;
+DROP VIEW TVShows;
+DROP VIEW otherApps;
