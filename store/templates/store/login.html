@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Utunes Login</title>
+        <title>uTunes Login</title>
     </head>
 
     <body>
-        <h1>Login to Utunes</h1>
+        <h1>Login to uTunes</h1>
 
-        <form id="login_form" method="post" action="/login/login/">
+        <form id="login_form" method="post" action="/store/login/">
             {% csrf_token %}
             Username: <input type="text" name="username" value="" size="50" />
             <br />
