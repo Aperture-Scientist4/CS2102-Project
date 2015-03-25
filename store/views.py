@@ -24,3 +24,22 @@ def register(request):
             {'user_form': user_form, 'registered': registered} )
 
 
+def user_login(request):
+
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(username=username, password=password)
+
+        if user:
+            login(request, user)
+            return HttpResponseRedirect('/store/')
+        else:
+            print ("Invalid login details: {0}, {1}".format(username, password))
+            return HttpResponse("Invalid login!")
+
+    else:
+
+        return render(request, 'store/login.html', {})
+
