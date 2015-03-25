@@ -16,3 +16,4 @@ INSERT INTO user(email, password) VALUES('averagejoe@yahoomail.com', 'pass123');
 INSERT INTO user(email, password) VALUES('gamerguy@gmail.com', 'GabeN');
 INSERT INTO user(email, password) VALUES('business@mail.com', 'Corporate');
 INSERT INTO user(email, password) VALUES('singlemom@yahoomail.com', 'Sally&Max');
+INSERT INTO user(email, password) VALUES('thegrouch@sesamestreetmail.com', 'Trashcan');
