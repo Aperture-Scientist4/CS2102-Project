@@ -2,14 +2,13 @@ from django.shortcuts import render
 from store.forms import UserForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
-from django.views import generic
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.http import HttpResponseRedirect, HttpResponse
 
-class IndexView(generic.ListView):
-    template_name = 'store/index.html'
+def indexView(request):
+    return render(request, 'store/index.html', {})
 
 def register(request):
     registered = False
