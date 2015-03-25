@@ -1,5 +1,10 @@
 CS2102-Project
 --
+How to make the website work:
+1. download python and django
+2. pull all the changes in github and make sure your local version is the newest.
+3. For Windows, open cmd in the folder contained manage.py and run command "python manage.py startserver"
+4. Use browser go to http://127.0.0.1:8000/store/
 
 If you want to get the database up and running on your own computer, here's what you do:
 
