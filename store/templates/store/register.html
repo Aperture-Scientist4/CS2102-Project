@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>uTunes Registration</title>
+    </head>
+
+    <body>
+        <h1>User Registration</h1>
+
+        {% if registered %}
+        <strong>Thank you for registering!</strong>
+        <a href="/store/">Return to the homepage.</a><br />
+        {% else %}
+        <strong>Register here!</strong><br />
+
+        <form id="user_form" method="post" action="/store/register/"
+                enctype="multipart/form-data">
+
+            {% csrf_token %}
+
+            {{ user_form.as_p }}
+
+            <input type="submit" name="submit" value="Register" />
+        </form>
+        {% endif %}
+    </body>
+</html>
