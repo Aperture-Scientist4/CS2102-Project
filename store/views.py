@@ -1,7 +1,12 @@
 from django.shortcuts import render
 from store.forms import UserForm
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.views import generic
+from django.http import HttpResponseRedirect, HttpResponse
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordChangeForm
+from django.http import HttpResponseRedirect, HttpResponse
 
 class IndexView(generic.ListView):
     template_name = 'store/index.html'
@@ -43,3 +48,40 @@ def user_login(request):
 
         return render(request, 'store/login.html', {})
 
+
+@login_required
+def restricted(request):
+    return render(request, 'store/restricted.html', {})
+
+@login_required
+def user_logout(request):
+    logout(request)
+
+    # Take the user back to the homepage.
+    return HttpResponseRedirect('/store/')
+
+@login_required
+def password_change(request):
+    if request.method == 'POST':
+        password = request.POST.get('password')
+        newpassword1 = request.POST.get('newpassword1')
+        newpassword2 = request.POST.get('newpassword2')
+        if newpassword1 != newpassword2:
+           return HttpResponse("New password does not match!")
+        user = User.objects.get(username = request.POST.get('username'))
+        
+        data = {
+            'old_password': password,
+            'new_password1': newpassword1,
+            'new_password2': newpassword2,
+        }
+        
+        form = PasswordChangeForm(user, data)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.user)
+            return HttpResponseRedirect('/store/login/')
+        else:
+            return HttpResponse("Invalid Password")
+    else:
+        return render(request, 'store/restricted/changePassword.html', {})
