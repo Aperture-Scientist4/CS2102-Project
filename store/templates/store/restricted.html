@@ -1,1 +1,25 @@
-<a href="/store/restricted/changePassword/">Change Password!</a><br />
+
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Welcome {{username}}!</title>
+    </head>
+
+    <body>
+    	<a href="/store/{{username}}/changePassword/">Change Password!</a><br />
+        <h1>Products:</h1>
+        {% if app_list %}
+    	<ul>
+    		{% for app in app_list %}
+       	 	<li><a href="/store/{{app.id}}">{{ app.name }}</a></li>
+    		{% endfor %}
+    	</ul>
+		{% else %}
+    		<p>No Apps have been bought!</p>
+		{% endif %}
+
+
+
+    </body>
+</html>
