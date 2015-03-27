@@ -6,6 +6,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.http import HttpResponseRedirect, HttpResponse
+from store.models import Purchased, Rent, App
 
 def indexView(request):
     return render(request, 'store/index.html', {})
@@ -49,8 +50,17 @@ def user_login(request):
 
 
 @login_required
-def restricted(request):
-    return render(request, 'store/restricted.html', {})
+def restricted(request, user_name):
+	user = User.objects.get(username = user_name)
+	context_dict = {}
+	context_dict['username'] = user.username
+	app_list = Purchased.objects.raw('SELECT * FROM store_purchased WHERE user= %s' , [user.username])
+	'''
+	app_list.append(Rent.objects.raw('SELECT * FROM store_rent WHERE user= %s' , [user.username]))
+	'''
+	context_dict['app_list'] = app_list
+
+	return render(request, 'store/restricted.html', context_dict)
 
 @login_required
 def user_logout(request):
