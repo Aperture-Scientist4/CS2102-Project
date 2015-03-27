@@ -4,7 +4,7 @@
 <link rel="stylesheet" type="text/css" href="{% static 'store/style.css' %}" />
 
 {% if user.is_authenticated %}
-<a href="/store/restricted/">Restricted Page</a><br />
+<a href="/store/{{user.username}}/">My Home Page</a><br />
 <a href="/store/logout/">Logout</a><br />
 {% else %}
 <a href="/store/register/">Register Here</a><br />
