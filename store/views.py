@@ -104,8 +104,8 @@ def password_change(request,user_name):
         else:
             return HttpResponse("Invalid Password")
     else:
-<<<<<<< HEAD
-        return render(request, 'store/restricted/changePassword.html', {})
+        return render(request, 'store/changePassword.html', context_dict)
+
 #ProdcutPage views-->
 def ProductEdit(request, product_id):
     if request.method == 'POST':
@@ -163,8 +163,6 @@ def create_search(request):
         form = SearchForm()
         return render(request,'store/search.html',{'form':form})
 #<--SearchPage View
-=======
-        return render(request, 'store/changePassword.html', context_dict)
 
 @login_required
 def rate_review(request, user_name, orderid) :
@@ -189,5 +187,3 @@ def rate_review(request, user_name, orderid) :
     else:
         return render(request, 'store/review.html', context_dict)
       
-
->>>>>>> origin/master
