@@ -100,3 +100,28 @@ def password_change(request,user_name):
             return HttpResponse("Invalid Password")
     else:
         return render(request, 'store/changePassword.html', context_dict)
+
+@login_required
+def rate_review(request, user_name, orderid) :
+    user = User.objects.get(username = user_name)
+
+    if len(Purchased.objects.filter(order_id = orderid)[:])!= 0:
+        order = Purchased.objects.get(order_id = orderid)
+    else:
+        order = Rent.objects.get(order_id = orderid)
+    context_dict={}
+    context_dict['order'] = order
+    context_dict['username'] = user.username
+    
+    if request.method == 'POST':
+        rating = request.POST.get('rating')
+        review = request.POST.get('review')
+        order.rating = rating
+        order.review = review
+        order.save()
+        return HttpResponseRedirect('/store/')
+
+    else:
+        return render(request, 'store/review.html', context_dict)
+      
+
