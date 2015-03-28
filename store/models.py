@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from django import forms
 
 class App(models.Model):
 	GENRE_CHOICES = (
@@ -51,3 +51,4 @@ class Rent(models.Model):
 	expire_date = models.DateField()
 	def __str__(self):
 		return self.order_id
+
