@@ -13,7 +13,10 @@
         {% if app_list_purchased %}
     	<ul>
     		{% for purchased in app_list_purchased %}
-       	 	<li><a href="/store/product/{{ purchased.appid }}/">{{ purchased.appid }}</a></li>
+       	 	<li><a href="/store/product/{{ purchased.order_id }}/">{{ purchased.appid }}</a>
+            <a href="/store/{{username}}/review/{{ purchased.order_id }}/">review</a>        
+            </li>
+
     		{% endfor %}
     	</ul>
 		{% else %}
@@ -25,7 +28,9 @@
         {% if app_list_rent %}
         <ul>
             {% for rent in app_list_rent %}
-            <li><a href="/store/product/{{ rent.appid }}/">{{ rent.appid }}</a></li>
+            <li><a href="/store/product/{{ rent.order_id }}/">{{ rent.appid }}</a>
+            <a href="/store/{{username}}/review/{{ rent.order_id }}/">review</a>  
+            </li>
             {% endfor %}
         </ul>
         {% else %}
