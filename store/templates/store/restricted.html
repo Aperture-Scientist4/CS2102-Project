@@ -9,21 +9,23 @@
     <body>
     	<a href="/store/{{username}}/changePassword/">Change Password!</a><br />
         <h1>Welcome {{username}}!</h1>
-        <h2>Products:</h2>
+        <h2>App Purchased:</h2>
         {% if app_list_purchased %}
     	<ul>
-    		{% for app in app_list_purchased %}
-       	 	<li>{{ app }}</li>
+    		{% for purchased in app_list_purchased %}
+       	 	<li><a href="/store/product/{{ purchased.appid }}/">{{ purchased.appid }}</a></li>
     		{% endfor %}
     	</ul>
 		{% else %}
     		<p>No Apps have been bought!</p>
 		{% endif %}
 
+        <h2>App Rented:</h2>
+
         {% if app_list_rent %}
         <ul>
-            {% for app in app_list_rent %}
-            <li>{{ app }}</li>
+            {% for rent in app_list_rent %}
+            <li><a href="/store/product/{{ rent.appid }}/">{{ rent.appid }}</a></li>
             {% endfor %}
         </ul>
         {% else %}
