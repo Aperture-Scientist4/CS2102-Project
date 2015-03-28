@@ -54,11 +54,15 @@ def restricted(request, user_name):
 	user = User.objects.get(username = user_name)
 	context_dict = {}
 	context_dict['username'] = user.username
-	app_list = Purchased.objects.raw('SELECT * FROM store_purchased WHERE user= %s' , [user.username])
+	app_list_purchased = Purchased.objects.filter(userid_id = user.id)[:]
+	app_list_rent = Rent.objects.filter(userid_id = user.id)[:]
 	'''
+	app_list = Purchased.objects.raw('SELECT * FROM store_purchased WHERE user= %s' , [user.username])
+
 	app_list.append(Rent.objects.raw('SELECT * FROM store_rent WHERE user= %s' , [user.username]))
 	'''
-	context_dict['app_list'] = app_list
+	context_dict['app_list_purchased'] = app_list_purchased
+	context_dict['app_list_rent'] = app_list_rent
 
 	return render(request, 'store/restricted.html', context_dict)
 
