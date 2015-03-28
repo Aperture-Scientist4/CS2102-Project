@@ -74,14 +74,16 @@ def user_logout(request):
     return HttpResponseRedirect('/store/')
 
 @login_required
-def password_change(request):
+def password_change(request,user_name):
+    user = User.objects.get(username = user_name)
+    context_dict = {}
+    context_dict['username'] = user.username
     if request.method == 'POST':
         password = request.POST.get('password')
         newpassword1 = request.POST.get('newpassword1')
         newpassword2 = request.POST.get('newpassword2')
         if newpassword1 != newpassword2:
            return HttpResponse("New password does not match!")
-        user = User.objects.get(username = request.POST.get('username'))
         
         data = {
             'old_password': password,
@@ -97,4 +99,4 @@ def password_change(request):
         else:
             return HttpResponse("Invalid Password")
     else:
-        return render(request, 'store/restricted/changePassword.html', {})
+        return render(request, 'store/changePassword.html', context_dict)
