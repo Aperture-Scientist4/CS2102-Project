@@ -16,5 +16,10 @@ urlpatterns = patterns('',
     url(r'^product/(?P<product_id>\d+)/edit/$', views.ProductEdit,name='ProductEdit'),
     url(r'^(?P<user_name>[\w\-]+)/$', views.restricted, name='restricted'),
     url(r'^(?P<user_name>[\w\-]+)/changePassword/$', views.password_change, name='changePassword'),
+<<<<<<< HEAD
     
 )
+=======
+    url(r'^(?P<user_name>[\w\-]+)/review/(?P<orderid>[\w\-]+)/$', views.rate_review, name='reviewRate'),
+    )
+>>>>>>> origin/master

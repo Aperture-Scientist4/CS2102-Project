@@ -1,5 +1,5 @@
 from django.contrib import admin
-from store.models import Rent, Purchased, App
+from store.models import App, Purchased, Rent
 from django.contrib.auth.models import User
 
 admin.site.register(Rent)

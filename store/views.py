@@ -59,11 +59,15 @@ def restricted(request, user_name):
 	user = User.objects.get(username = user_name)
 	context_dict = {}
 	context_dict['username'] = user.username
-	app_list = Purchased.objects.raw('SELECT * FROM store_purchased WHERE user= %s' , [user.username])
+	app_list_purchased = Purchased.objects.filter(userid_id = user.id)[:]
+	app_list_rent = Rent.objects.filter(userid_id = user.id)[:]
 	'''
+	app_list = Purchased.objects.raw('SELECT * FROM store_purchased WHERE user= %s' , [user.username])
+
 	app_list.append(Rent.objects.raw('SELECT * FROM store_rent WHERE user= %s' , [user.username]))
 	'''
-	context_dict['app_list'] = app_list
+	context_dict['app_list_purchased'] = app_list_purchased
+	context_dict['app_list_rent'] = app_list_rent
 
 	return render(request, 'store/restricted.html', context_dict)
 
@@ -75,14 +79,16 @@ def user_logout(request):
     return HttpResponseRedirect('/store/')
 
 @login_required
-def password_change(request):
+def password_change(request,user_name):
+    user = User.objects.get(username = user_name)
+    context_dict = {}
+    context_dict['username'] = user.username
     if request.method == 'POST':
         password = request.POST.get('password')
         newpassword1 = request.POST.get('newpassword1')
         newpassword2 = request.POST.get('newpassword2')
         if newpassword1 != newpassword2:
            return HttpResponse("New password does not match!")
-        user = User.objects.get(username = request.POST.get('username'))
         
         data = {
             'old_password': password,
@@ -98,6 +104,7 @@ def password_change(request):
         else:
             return HttpResponse("Invalid Password")
     else:
+<<<<<<< HEAD
         return render(request, 'store/restricted/changePassword.html', {})
 #ProdcutPage views-->
 def ProductEdit(request, product_id):
@@ -156,3 +163,31 @@ def create_search(request):
         form = SearchForm()
         return render(request,'store/search.html',{'form':form})
 #<--SearchPage View
+=======
+        return render(request, 'store/changePassword.html', context_dict)
+
+@login_required
+def rate_review(request, user_name, orderid) :
+    user = User.objects.get(username = user_name)
+
+    if len(Purchased.objects.filter(order_id = orderid)[:])!= 0:
+        order = Purchased.objects.get(order_id = orderid)
+    else:
+        order = Rent.objects.get(order_id = orderid)
+    context_dict={}
+    context_dict['order'] = order
+    context_dict['username'] = user.username
+    
+    if request.method == 'POST':
+        rating = request.POST.get('rating')
+        review = request.POST.get('review')
+        order.rating = rating
+        order.review = review
+        order.save()
+        return HttpResponseRedirect('/store/')
+
+    else:
+        return render(request, 'store/review.html', context_dict)
+      
+
+>>>>>>> origin/master

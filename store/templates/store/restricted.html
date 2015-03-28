@@ -8,16 +8,34 @@
 
     <body>
     	<a href="/store/{{username}}/changePassword/">Change Password!</a><br />
-        <h1>Products:</h1>
-        {% if app_list %}
+        <h1>Welcome {{username}}!</h1>
+        <h2>App Purchased:</h2>
+        {% if app_list_purchased %}
     	<ul>
-    		{% for app in app_list %}
-       	 	<li><a href="/store/{{app.id}}">{{ app.name }}</a></li>
+    		{% for purchased in app_list_purchased %}
+       	 	<li><a href="/store/product/{{ purchased.order_id }}/">{{ purchased.appid }}</a>
+            <a href="/store/{{username}}/review/{{ purchased.order_id }}/">review</a>        
+            </li>
+
     		{% endfor %}
     	</ul>
 		{% else %}
     		<p>No Apps have been bought!</p>
 		{% endif %}
+
+        <h2>App Rented:</h2>
+
+        {% if app_list_rent %}
+        <ul>
+            {% for rent in app_list_rent %}
+            <li><a href="/store/product/{{ rent.order_id }}/">{{ rent.appid }}</a>
+            <a href="/store/{{username}}/review/{{ rent.order_id }}/">review</a>  
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+            <p>No Apps have been Rented!</p>
+        {% endif %}
 
 
 
