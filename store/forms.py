@@ -7,3 +7,36 @@ class UserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('username', 'email', 'password')
+
+class SearchForm(forms.Form):
+    def get_choices():
+        return [('Cats','Cats'),('Dogs','Dogs')]
+    def __init__(self,*args,**kwargs):
+        super(SearchForm,self).__init__(*args,**kwargs)
+        self.fields['keyword'] = forms.CharField(label='Keywords ', required = False)
+        self.fields['types'] = forms.ChoiceField(label='Categary ',choices = SearchForm.get_choices())
+
+class FeedbackForm(forms.Form):
+    def get_choices():
+        return [(0,'0'),(1,'1'),(2,'2'),(3,'3'),(4,'4'),(5,'5')]
+    def __init__(self,*args,**kwargs):
+        super(FeedbackForm,self).__init__(*args,**kwargs)
+        self.fields['FeedbackBox'] = forms.CharField(label='Feedback ', required = False, widget=forms.Textarea(attrs={'cols': 60, 'rows': 10,}))
+        self.fields['RatingBox'] = forms.ChoiceField(label='Rating ',choices = FeedbackForm.get_choices())
+
+class RentForm(forms.Form):
+    def __init__(self,*args,**kwargs):
+        super(RentForm,self).__init__(*args,**kwargs)
+        self.fields['DateBox'] = forms.DateField(label='ReturnDate ')
+
+class AppEditForm(forms.Form):
+    def get_Device():
+        return [('1','1'),('2','2')]
+    def __init__(self,*args,**kwargs):
+        super(RentForm,self).__init__(*args,**kwargs)
+        self.fields['AppName'] = forms.CharField(required=True)
+        self.fields['RetailPrice'] = forms.DecimalField(required=True)
+        self.fields['RentPrice'] = forms.DecimalField(required=False)
+        self.fields['Genre'] = forms.ChoiceField(choices = FeedbackForm.getChoices())
+        self.fields['ReleaseDate'] = forms.DateField(required=False)
+        self.fields['Description'] = forms.CharField(required = False, widget=forms.Textarea(attrs={'cols': 60, 'rows':10,}))

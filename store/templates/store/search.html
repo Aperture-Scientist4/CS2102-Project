@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+
+<p align="right">Welcome,{{username}}, <a href ="/store/homepage">home</a></p>
+<h1>Search Page Home<br></h1>
+<form action="/store/search/" method="post">
+    {% csrf_token %}
+    {{form}}
+    <input type="submit" name="submit" value="Submit"/>
+</form>
+{% if SearchDone %}
+    <h3>The search result for "{{SearchName}}" on the genre "{{SearchGenre}}:"</h3>
+{% endif %}
+
+{% if result %}
+    <table border = "1">
+        <tr>
+            <td>App Name </td>
+            <td>Price </td>
+            <td>Rating </td>
+        </tr>
+        {% for row in result %}
+        <tr>
+            <td><a href="/store/product/{{row.0 }}/">{{row.1}}</a></td>
+        </tr>
+        {% endfor %}
+    </table> 
+{% else %}
+    <p>No apps are available!</p>
+{% endif %}
+
+</body>
+</html>

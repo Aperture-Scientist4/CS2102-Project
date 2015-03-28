@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+<form action="/store/product/{{appID}}/edit/" method="post">    
+    <label>App name:  </label>
+    {{form.AppName}}
+    <label>Retail Price:  </label>
+    {{form.RetailPrice}}
+    <label>Rent Price:  </label>
+    {{form.RentPrice}}
+    <label>Genre:  </label>
+    {{form.Genre}}
+    <label>Release Date:  </label>
+    {{form.ReleaseDate}}
+    <label>Description:<br/></label>
+    {{form.Description}}
+    <input type="submit" name="submit" value="Submit"/>
+</form>
+</body>
+</html>
