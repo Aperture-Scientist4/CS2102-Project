@@ -9,4 +9,5 @@ urlpatterns = patterns('',
     url(r'^logout/$', views.user_logout, name='logout'),
     url(r'^(?P<user_name>[\w\-]+)/$', views.restricted, name='restricted'),
     url(r'^(?P<user_name>[\w\-]+)/changePassword/$', views.password_change, name='changePassword'),
+    url(r'^(?P<user_name>[\w\-]+)/review/(?P<orderid>[\w\-]+)/$', views.rate_review, name='reviewRate'),
     )
