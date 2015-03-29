@@ -12,9 +12,8 @@
         <h2>App Purchased:</h2>
         {% if app_list_purchased %}
     	<ul>
-    		{% for purchased in app_list_purchased %}
-       	 	<li><a href="/store/product/{{ purchased.appid }}/">{{ purchased.appid }}</a>
-            <a href="/store/{{username}}/review/{{ purchased.order_id }}/">review</a>        
+    		{% for app in app_list_purchased %}
+       	 	<li><a href="/store/product/{{ app.appid }}/">{{ app.name }}</a>     
             </li>
 
     		{% endfor %}
@@ -27,9 +26,8 @@
 
         {% if app_list_rent %}
         <ul>
-            {% for rent in app_list_rent %}
-            <li><a href="/store/product/{{ rent.appid }}/">{{ rent.appid }}</a>
-            <a href="/store/{{username}}/review/{{ rent.order_id }}/">review</a>  
+            {% for app in app_list_rent %}
+            <li><a href="/store/product/{{ app.appid }}/">{{ app.name}}</a>
             </li>
             {% endfor %}
         </ul>

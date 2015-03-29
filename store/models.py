@@ -19,7 +19,7 @@ class App(models.Model):
 	release_date = models.DateField()
 	genre = models.CharField(max_length=1, choices=GENRE_CHOICES)
 	def __str__(self):
-		return self.name
+          return self.name
 
 class Purchased(models.Model):
 	order_id = models.CharField(max_length=32, primary_key=True)

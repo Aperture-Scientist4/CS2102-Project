@@ -59,8 +59,15 @@ def restricted(request, user_name):
 	user = User.objects.get(username = user_name)
 	context_dict = {}
 	context_dict['username'] = user.username
-	app_list_purchased = Purchased.objects.filter(userid_id = user.id)[:]
-	app_list_rent = Rent.objects.filter(userid_id = user.id)[:]
+	list_purchased = Purchased.objects.filter(userid_id = user.id)[:]
+	app_list_purchased = []
+	app_list_rent = []
+	for purchase in list_purchased :
+            app_list_purchased.append(App.objects.get(appid = purchase.appid_id))
+	list_rent = Rent.objects.filter(userid_id = user.id)[:]
+	for rent in list_rent :
+            app_list_rent.append(App.objects.get(appid = rent.appid_id))
+
 	'''
 	app_list = Purchased.objects.raw('SELECT * FROM store_purchased WHERE user= %s' , [user.username])
 
