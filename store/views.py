@@ -113,11 +113,12 @@ def ProductEdit(request, product_id):
     else:
         return render(request,'store/AppEdit.html',{'form':form})
 def ProductPage(request, product_id):
+    app = App.objects.get(appid = product_id)
     rentForm = RentForm()
     feedbackForm = FeedbackForm()
     purchased = False
     othersRating = [('Elephant','1','Badddddd!'),('Rabbit','5','Exxxxceeeeelllenttttt!'),]
-    appData = ['1','ProductPage','haha','wahaha','hahahaha','some','any','most']
+    appData = [app.appid, app.name,app.purchase_price, app.rent_price,app.genre,app.device,app.release_date,app.description]
     return render(request,'store/product.html',{'appData':appData,'purchased':purchased,
                                                 'feedbackForm':feedbackForm,
                                                 'rentForm':rentForm,'othersRating':othersRating})
