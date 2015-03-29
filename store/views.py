@@ -115,15 +115,18 @@ def password_change(request,user_name):
 
 #ProdcutPage views-->
 def ProductEdit(request, product_id):
+    form = AppEditForm()
     if request.method == 'POST':
-        form = AppEditForm()
+        a = 1
+        return HttpResonseRedirect('/store/product/'+product_id)
     else:
-        return render(request,'store/AppEdit.html',{'form':form})
+        return render(request,'store/restricted/AppEdit.html',{'form':form})
+
 def ProductPage(request, product_id):
     app = App.objects.get(appid = product_id)
     rentForm = RentForm()
     feedbackForm = FeedbackForm()
-    purchased = False
+    purchased = True
     othersRating = [('Elephant','1','Badddddd!'),('Rabbit','5','Exxxxceeeeelllenttttt!'),]
     appData = [app.appid, app.name,app.purchase_price, app.rent_price,app.genre,app.device,app.release_date,app.description]
     return render(request,'store/product.html',{'appData':appData,'purchased':purchased,
