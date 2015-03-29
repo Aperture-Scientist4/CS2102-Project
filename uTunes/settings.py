@@ -64,6 +64,16 @@ DATABASES = {
     }
 }
 
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.oracle',
+#        'NAME': 'xe',
+#        'USER': 'Chris',
+#        'PASSWORD': 'password',
+#        'HOST': 'localhost',
+#        'PORT': '1521'
+#    }
+#}
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
 

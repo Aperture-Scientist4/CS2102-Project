@@ -1,1 +1,41 @@
-<a href="/store/restricted/changePassword/">Change Password!</a><br />
+
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Welcome {{username}}!</title>
+    </head>
+
+    <body>
+    	<a href="/store/{{username}}/changePassword/">Change Password!</a><br />
+        <h1>Welcome {{username}}!</h1>
+        <h2>App Purchased:</h2>
+        {% if app_list_purchased %}
+    	<ul>
+    		{% for app in app_list_purchased %}
+       	 	<li><a href="/store/product/{{ app.appid }}/">{{ app.name }}</a>     
+            </li>
+
+    		{% endfor %}
+    	</ul>
+		{% else %}
+    		<p>No Apps have been bought!</p>
+		{% endif %}
+
+        <h2>App Rented:</h2>
+
+        {% if app_list_rent %}
+        <ul>
+            {% for app in app_list_rent %}
+            <li><a href="/store/product/{{ app.appid }}/">{{ app.name}}</a>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+            <p>No Apps have been Rented!</p>
+        {% endif %}
+
+
+
+    </body>
+</html>
