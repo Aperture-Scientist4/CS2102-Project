@@ -59,14 +59,14 @@ def restricted(request, user_name):
 	user = User.objects.get(username = user_name)
 	context_dict = {}
 	context_dict['username'] = user.username
-	list_purchased = Purchased.objects.filter(userid_id = user.id)[:]
-	app_list_purchased = []
-	app_list_rent = []
-	for purchase in list_purchased :
-            app_list_purchased.append(App.objects.get(appid = purchase.appid_id))
-	list_rent = Rent.objects.filter(userid_id = user.id)[:]
-	for rent in list_rent :
-            app_list_rent.append(App.objects.get(appid = rent.appid_id))
+	app_list_purchased = Purchased.objects.filter(userid_id = user.id)[:]
+	#app_list_purchased = []
+	#app_list_rent = []
+	#for purchase in list_purchased :
+        #    app_list_purchased.append(App.objects.get(appid = purchase.appid))
+	app_list_rent = Rent.objects.filter(userid_id = user.id)[:]
+	#for rent in list_rent :
+        #    app_list_rent.append(App.objects.get(appid = rent.appid))
 
 	'''
 	app_list = Purchased.objects.raw('SELECT * FROM store_purchased WHERE user= %s' , [user.username])
@@ -115,18 +115,15 @@ def password_change(request,user_name):
 
 #ProdcutPage views-->
 def ProductEdit(request, product_id):
-    form = AppEditForm()
     if request.method == 'POST':
-        a = 1
-        return HttpResonseRedirect('/store/product/'+product_id)
+        form = AppEditForm()
     else:
-        return render(request,'store/restricted/AppEdit.html',{'form':form})
-
+        return render(request,'store/AppEdit.html',{'form':form})
 def ProductPage(request, product_id):
     app = App.objects.get(appid = product_id)
     rentForm = RentForm()
     feedbackForm = FeedbackForm()
-    purchased = True
+    purchased = False
     othersRating = [('Elephant','1','Badddddd!'),('Rabbit','5','Exxxxceeeeelllenttttt!'),]
     appData = [app.appid, app.name,app.purchase_price, app.rent_price,app.genre,app.device,app.release_date,app.description]
     return render(request,'store/product.html',{'appData':appData,'purchased':purchased,
