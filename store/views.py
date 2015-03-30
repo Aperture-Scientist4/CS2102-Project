@@ -135,7 +135,7 @@ def ProductPage(request, product_id):
         purchased = False
     rentForm = RentForm()
     feedbackForm = FeedbackForm()
-    othersRating = cursor.execute("SELECT rating, review FROM store_purchased WHERE appid_id = %d" % int(product_id))
+    othersRating = cursor.execute("SELECT a.username, s.rating, s.review FROM store_purchased s, auth_user a WHERE s.appid_id = %d AND s.userid_id = a.id" % int(product_id))
     appData = [app.appid, app.name,app.purchase_price, app.rent_price,app.genre,app.device,app.release_date,app.description]
     return render(request,'store/product.html',{'appData':appData,'purchased':purchased,
                                                 'feedbackForm':feedbackForm,
