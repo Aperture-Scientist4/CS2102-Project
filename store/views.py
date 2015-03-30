@@ -119,12 +119,15 @@ def ProductEdit(request, product_id):
         form = AppEditForm()
     else:
         return render(request,'store/AppEdit.html',{'form':form})
+
 def ProductPage(request, product_id):
+    cursor = connection.cursor()
+    
     app = App.objects.get(appid = product_id)
     rentForm = RentForm()
     feedbackForm = FeedbackForm()
     purchased = False
-    othersRating = [('Elephant','1','Badddddd!'),('Rabbit','5','Exxxxceeeeelllenttttt!'),]
+    othersRating = cursor.execute("SELECT rating, review FROM store_purchased WHERE appid_id = %d" % int(product_id))
     appData = [app.appid, app.name,app.purchase_price, app.rent_price,app.genre,app.device,app.release_date,app.description]
     return render(request,'store/product.html',{'appData':appData,'purchased':purchased,
                                                 'feedbackForm':feedbackForm,
