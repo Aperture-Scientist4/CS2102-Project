@@ -1,0 +1,45 @@
+INSERT INTO store_app(appid, name, purchase_price, rent_price, description, device, release_date, genre) VALUES  (34235,'Warriors Quest', 2.99, 0.50, ' An evil enchanter took over the Kingdom of Malioch, banning all happiness with in the kingdom. The great warrior Helvan fought the enchanter, only to lose in five minutes. Now, you play as Helvan¡¯s younger brother Melvan, who has never held a sword in his life. Can you do what your brother could not?', 'You-phone', 2014-01-28, 'game');
+
+INSERT INTO store_app(appid, name, purchase_price, rent_price, description, device, release_date, genre) VALUES  (78214,'Ascew-Ell', 15.99, 3.00, 'Ever wished there was a better coordinate tuples of data than doing it by hand? Wish you had a system that could automatically check for integrity constraints? Want a system that will automatically update views of data as the associated data changes? The system you want is Ascew¡¯Ell.', 'Cyborg', 1974-01-02, 'app');
+
+INSERT INTO store_app(appid, name, purchase_price, rent_price, description, device, release_date, genre) VALUES  (27384,'Cambrian Park', 25.99, 10.00, 'John Granger has successfully resurrected creatures from the Permian Era to populate his theme park. John hires paleontologist Alan Grunt, paleobotanist Sally Sue, and professional counter Mr. Silverbluhm to investigate the park, only to have the whole party trapped on the island. Can they escape?', 'Uphone', 2000-01-01, 'movie');
+
+INSERT INTO store_app(appid, name, purchase_price, rent_price, description, device, release_date, genre) VALUES  (32432,'Boat!', 25.99, 10.00, 'After the pilot of the USBoatlines Boat 94-574 dies, ex-Boatforce Boat Pilot FirstName LastName has to take over the Boat and pilot it back to the BoatPort. Meanwhile bad things go on. Funny for everyone.', 'Cyborg', 1984-05-20, 'movie');
+
+INSERT INTO store_app(appid, name, purchase_price, rent_price, description, device, release_date, genre) VALUES  (11111,'Maria', 5.99, 2.00, 'The Spanish Maid Maria is transported to the Fungus Empire, where the Evil Rabbit Lord Sowber has kidnapped Emperor Pomelo. Now Sowber is sending out his army of Rabbits, Arrows and Mobgas to take over the entire Fungus Empire. Maria decides to stoprent VALUESneeds your help!', 'Cyborg', 1980-02-04, 'game');
+
+INSERT INTO store_app(appid, name, purchase_price, rent_price, description, device, release_date, genre) VALUES  (22223, 'Monster and Commando: Far Side of Time', 15.99, 5.99, 'Sgt. Anderson is the best VampWolf hunter in the business. BUt when the grand VampWolf, the Auyogi, escapes into an experimental quantum physics lab, Sg. Anderson will have to follow it...into the past. Now trapped in the 1800s, a world of sailing ships and archaic technology, can Sgt. Anderson stop the Auyogi before it kills its ancestors?', 'Cyborg', 2014-11-01, 'movie');
+
+
+
+
+
+
+INSERT INTO store_purchased(order_id, userid_id, appid_id, rating, review) VALUES('sadhbrw', 3, 27384, '0.0', 'This Sucks!');
+
+INSERT INTO store_purchased(order_id, userid_id, appid_id, rating, review) VALUES('iyeqbfa',4, 27384, '5.0', 'Im Commander Shepard and this is my favorite app on the App Store.');
+
+INSERT INTO store_purchased(order_id, userid_id, appid_id, rating, review) VALUES('iyeqbfa',5, 27384, '4.0', 'Good.');
+
+INSERT INTO store_purchased(order_id, userid_id, appid_id, rating, review) VALUES('asdahf',3, 11111, '4.0', 'I give this a 5.0 on quality and a 3.0 on morality, for an average of 4.0. The game play is fun, if a bit old-school, and it has nice presentation. Certainly a great throwback to games of yesteryear. Unfortunately it also brings with it some of the moral ideals of yesteryear, by casting the female main character as a maid,  stereotypical role for females. This dated notion of gender roles, while not a huge moral sin, does tarnish an otherwise great game.');
+
+INSERT INTO store_purchased(order_id, userid_id, appid_id, rating, review) VALUES('gvr',4, 11111, '5.0', 'Nice');
+
+INSERT INTO store_purchased(order_id, userid_id, appid_id, rating, review) VALUES('gamerguy', 5, 11111, '1.0', 'This quote unquote game is a blatant ploy by the SJWs to destroy the sacred male centric hobby of gaming, by invading it with female characters. The Mens Rights Armada will not stand for this.');
+
+INSERT INTO store_purchased(order_id, userid_id, appid_id, rating, review) VALUES('gbtrb',4, 32432, '2.0', 'Ehh, Its okay.');
+
+INSERT INTO store_purchased(order_id, userid_id, appid_id, rating, review) VALUES('thegdf',3, 32432, '0.0', 'This Sucks!');
+
+
+
+
+
+
+INSERT INTO store_rent(order_id, userid_id, appid_id, rating, review,expire_date) VALUES('qafd', 3, 22223, '2.0', 'Nice effects, but disturbingly low amounts of Sonnets. Also, time travel? Could you pick a more overused plot device? Not recommended for gentry. For the peanut gallery, the aforementioned effects and crude humor will be greatly entertaining.', 2014-12-01);
+
+INSERT INTO store_rent(order_id, userid_id, appid_id, rating, review,expire_date) VALUES('littleBilly',4, 22223, '5.0', 'The monster was really scary but I liked when the soldier guys shot him and made him blow up my mom bought me a Sgt. Anderson action figure and I play with it every day I want to see this movie again.', 2014-12-01);
+
+INSERT INTO store_rent(order_id, userid_id, appid_id, rating, review,expire_date) VALUES('homele',5, 22223, '1.0', 'This movie mocks the great VampWolves by making them easy to spot and kill. Real VampWolves are everywhere, disguised as ordinary people, and they control the government. The VampWolves will throw people into their death camps if they find out about this movie. Please take it off the app store.', 2014-12-01);
+
+
