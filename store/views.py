@@ -122,14 +122,22 @@ def ProductEdit(request, product_id):
 
 def ProductPage(request, product_id):
     cursor = connection.cursor()
-    
     app = App.objects.get(appid = product_id)
+    if request.user.is_authenticated():
+        user = User.objects.get(username=request.user)
+        cursor.execute("SELECT COUNT(*) FROM store_purchased WHERE userid_id = %s AND appid_id =%d" % (user.id, int(product_id)))
+        num = cursor.fetchone()[0]
+        if num > 0 :
+            purchased = True
+        else :
+            purchased = False
+    else :
+        purchased = False
     rentForm = RentForm()
     feedbackForm = FeedbackForm()
-    purchased = False
-    othersRating = cursor.execute("SELECT rating, review FROM store_purchased WHERE appid_id = %d" % int(product_id))
+    othersRating = cursor.execute("SELECT a.username, s.rating, s.review FROM store_purchased s, auth_user a WHERE s.appid_id = %d AND s.userid_id = a.id" % int(product_id))
     appData = [app.appid, app.name,app.purchase_price, app.rent_price,app.genre,app.device,app.release_date,app.description]
-    return render(request,'store/product.html',{'appData':appData,'purchased':purchased,
+    return render(request,'store/product.html',{'username':user.username,'appData':appData,'purchased':purchased,
                                                 'feedbackForm':feedbackForm,
                                                 'rentForm':rentForm,'othersRating':othersRating})
 
