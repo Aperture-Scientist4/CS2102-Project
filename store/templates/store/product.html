@@ -11,8 +11,8 @@
 <a href ="/store/search/" >Back to search page</a>
 {% if editable%}
 {% endif %}
-<H1>App Information<br></H1>
-<H2>Name: {{appData.1}}<br></H2>
+<h1>App Information<br/></h1>
+<h2>Name: {{appData.1}}<br/></h2>
 <p>Retail Price: {{appData.2}}</p>
 <p>Rental Price: {{appData.3}}</p>
 <p>Genre: {{appData.4}}</p>
@@ -24,9 +24,9 @@
     <p>You have purchased this product. We are pleased to hear your feedback and rating.</p>
     <form action="/store/product/{{appData.0}}/feedback/" method="post" onsubmit="return confirm('Confirm to submit your feedback?');">
         {% csrf_token %}
-        {{feedbackForm.FeedbackBox}}<br><br>
+        {{feedbackForm.FeedbackBox}}<br/><br/>
         <label>How would rate this app?</label>
-        {{feedbackForm.RatingBox}}<br><br>
+        {{feedbackForm.RatingBox}}<br/><br/>
         <input type="submit" name="submit" value="Submit"/>
     </form>
 {% else %}
@@ -41,21 +41,21 @@
         <p>Alternately, you may wish to rent this product.</p>
         <form action="/store/product/{{appData.0}}/rent/" method="post" onsubmit="return confirm('Confirm to make your payment?');">
             {% csrf_token %}
-            <label>Please select a returning date:<br></label>
+            <label>Please select a returning date:<br/></label>
             {{rentForm.DateBox}}
             <input type="submit" name="Rent" value="Rent"/>
         </form>
     {% endif %}
 {% endif %}
 
-<H3>Other users experience and rating with this app</H3>
+<h3>Other users experience and rating with this app</h3>
 {% if othersRating %}
     <dl>
         {% for row in othersRating %}
         <dt>User: {{row.0}}</dt>
         <dt>Rating: {{row.1}}</dt>
         <dd>{{row.2}}</dd>
-        <dd><br></dd>
+        <dd><br/></dd>
         {% endfor %}
     </dl>
 {% else %}

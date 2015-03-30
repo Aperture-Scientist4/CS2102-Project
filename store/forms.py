@@ -32,6 +32,7 @@ class RentForm(forms.Form):
         self.fields['DateBox'] = forms.DateField(label='ReturnDate ')
 
 class AppEditForm(forms.Form):
+    @staticmethod
     def get_Device():
         return [('1','1'),('2','2')]
     def __init__(self,*args,**kwargs):
