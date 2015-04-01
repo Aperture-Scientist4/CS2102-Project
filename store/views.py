@@ -127,6 +127,7 @@ def ProductPage(request, product_id):
     app = App.objects.get(appid = product_id)
     if request.user.is_authenticated():
         user = User.objects.get(username=request.user)
+        username = user.username
         cursor.execute("SELECT COUNT(*) FROM store_purchased WHERE userid_id = %s AND appid_id =%d" % (user.id, int(product_id)))
         num = cursor.fetchone()[0]
         if num > 0 :
@@ -135,11 +136,12 @@ def ProductPage(request, product_id):
             purchased = False
     else :
         purchased = False
+        username = 'Guest'
     rentForm = RentForm()
     feedbackForm = FeedbackForm()
     othersRating = cursor.execute("SELECT a.username, s.rating, s.review FROM store_purchased s, auth_user a WHERE s.appid_id = %d AND s.userid_id = a.id" % int(product_id))
     appData = [app.appid, app.name,app.purchase_price, app.rent_price,app.genre,app.device,app.release_date,app.description]
-    return render(request,'store/product.html',{'username':user.username,'appData':appData,'purchased':purchased,
+    return render(request,'store/product.html',{'username':username,'appData':appData,'purchased':purchased,
                                                 'feedbackForm':feedbackForm,
                                                 'rentForm':rentForm,'othersRating':othersRating})
 
