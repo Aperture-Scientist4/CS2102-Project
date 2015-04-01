@@ -56,27 +56,29 @@ def user_login(request):
 
 @login_required
 def restricted(request, user_name):
-	user = User.objects.get(username = user_name)
-	context_dict = {}
-	context_dict['username'] = user.username
-	list_purchased = Purchased.objects.filter(userid_id = user.id)[:]
-	app_list_purchased = []
-	app_list_rent = []
-	for purchase in list_purchased :
-            app_list_purchased.append(App.objects.get(appid = purchase.appid_id))
-	list_rent = Rent.objects.filter(userid_id = user.id)[:]
-	for rent in list_rent :
-            app_list_rent.append(App.objects.get(appid = rent.appid_id))
+    if request.user.username != user_name :
+        return HttpResponse("You are not allowed to access this page!")
+    user = User.objects.get(username = user_name)
+    context_dict = {}
+    context_dict['username'] = user.username
+    list_purchased = Purchased.objects.filter(userid_id = user.id)[:]
+    app_list_purchased = []
+    app_list_rent = []
+    for purchase in list_purchased :
+        app_list_purchased.append(App.objects.get(appid = purchase.appid_id))
+    list_rent = Rent.objects.filter(userid_id = user.id)[:]
+    for rent in list_rent :
+        app_list_rent.append(App.objects.get(appid = rent.appid_id))
 
-	'''
-	app_list = Purchased.objects.raw('SELECT * FROM store_purchased WHERE user= %s' , [user.username])
+    '''
+    app_list = Purchased.objects.raw('SELECT * FROM store_purchased WHERE user= %s' , [user.username])
 
-	app_list.append(Rent.objects.raw('SELECT * FROM store_rent WHERE user= %s' , [user.username]))
-	'''
-	context_dict['app_list_purchased'] = app_list_purchased
-	context_dict['app_list_rent'] = app_list_rent
+    app_list.append(Rent.objects.raw('SELECT * FROM store_rent WHERE user= %s' , [user.username]))
+    '''
+    context_dict['app_list_purchased'] = app_list_purchased
+    context_dict['app_list_rent'] = app_list_rent
 
-	return render(request, 'store/restricted.html', context_dict)
+    return render(request, 'store/restricted.html', context_dict)
 
 @login_required
 def user_logout(request):
