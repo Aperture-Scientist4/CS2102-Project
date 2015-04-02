@@ -126,8 +126,8 @@ def ProductPage(request, product_id):
     cursor = connection.cursor()
     app = App.objects.get(appid = product_id)
     if request.user.is_authenticated():
-        user = User.objects.get(username=request.user)
-        username = user.username
+        user = User.objects.get(username = request.user.username)
+        username = request.user.username
         cursor.execute("SELECT COUNT(*) FROM store_purchased WHERE userid_id = %s AND appid_id =%d" % (user.id, int(product_id)))
         num = cursor.fetchone()[0]
         if num > 0 :
@@ -171,6 +171,11 @@ def ErrorPage(request):
 
 #SearchPage View-->
 def create_search(request):
+    if request.user.is_authenticated():
+        
+        username = request.user.username
+    else :
+        username = 'Guest'
     if request.method == 'POST':
         form = SearchForm(request.POST)
         cursor = connection.cursor()
@@ -181,10 +186,11 @@ def create_search(request):
             return render(request,'store/search.html',
                     {'form':form,'result':rows,'SearchDone':SearchDone,
                      'SearchName':form.cleaned_data['keyword'],
-                     'SearchGenre':form.cleaned_data['types']})
+                     'SearchGenre':form.cleaned_data['types'],
+                     'username':username})
     else:
         form = SearchForm()
-        return render(request,'store/search.html',{'form':form})
+        return render(request,'store/search.html',{'form':form, 'username':username})
 #<--SearchPage View
 
 @login_required
