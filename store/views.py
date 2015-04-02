@@ -178,8 +178,14 @@ def create_search(request):
         username = 'Guest'
     if request.method == 'POST':
         form = SearchForm(request.POST)
+        keywords = request.POST.get('Keywords ')
+        genre = request.POST.get('Categary ')
         cursor = connection.cursor()
-        cursor.execute('SELECT db.appid,db.name,db.purchase_price,db.device FROM mockDB db;')
+        #if (keywords == ''):
+        cursor.execute("SELECT a.appid, a.name, a.purchase_price FROM store_app a WHERE genre = 'game';")
+        #else :
+            
+            #cursor.execute("SELECT a.appid,a.name,a.purchase_price,a.device FROM store_app a WHERE genre = %r AND (name LIKE %r OR description LIKE %r);" % (genre,keywords,keywords))
         rows = cursor.fetchall()
         if form.is_valid():
             SearchDone = True
