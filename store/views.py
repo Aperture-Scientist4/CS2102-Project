@@ -190,18 +190,25 @@ def create_search(request):
             #rating implementation
             for app in rows: #app is a tuple
                 appid = app[0]
-                cursor.execute("SELECT COUNT(*), SUM(r.rating) FROM store_app a, store_rent r WHERE r.appid_id = a.appid AND a.appid = %d; " % int(appid))
+                cursor.execute("SELECT COUNT(*), SUM(r.rating) FROM store_app a, store_rent r WHERE r.rating > 0 AND r.appid_id = a.appid AND a.appid = %d; " % int(appid))
                 rent = cursor.fetchone()
-                cursor.execute("SELECT COUNT(*), SUM(p.rating) FROM store_app a, store_purchased p WHERE p.appid_id = a.appid AND a.appid = %d;" % int(appid))
+                cursor.execute("SELECT COUNT(*), SUM(p.rating) FROM store_app a, store_purchased p WHERE p.rating > 0 AND p.appid_id = a.appid AND a.appid = %d;" % int(appid))
                 purchase = cursor.fetchone()
-                #rating = float(int(rent[1]) + int(purchase[1]))/float(rent[0]+purchase[0])
+                if rent[0]+purchase[0] == 0:
+                    rating = 0
+                elif rent[0] == 0:
+                    rating = int(int(purchase[1])/float(purchase[0]))
+                elif purchase[0] == 0:
+                    rating = int(int(rent[1])/float(rent[0]))
+                else:
+                    rating = int((int(rent[1]) + purchase[1])/float(rent[0]+purchase[0]))
 
             SearchDone = True
             return render(request,'store/search.html',
                     {'form':form,'result':rows,'SearchDone':SearchDone,
                      'SearchName':form.cleaned_data['keyword'],
                      'SearchGenre':form.cleaned_data['types'],
-                     'username':username})
+                     'username':username, 'rating': rating})
     else:
         form = SearchForm()
         return render(request,'store/search.html',{'form':form, 'username':username})
