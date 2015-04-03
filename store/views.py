@@ -190,7 +190,7 @@ def create_search(request):
         if form.is_valid():
             keywords = form.cleaned_data['keyword']
             genre = form.cleaned_data['types']
-            rating = 0
+            rows_with_rating = list()
             cursor = connection.cursor()
             if (keywords == ''):
                 cursor.execute("SELECT a.appid, a.name, a.purchase_price FROM store_app a WHERE genre = '%s';" % genre)
@@ -212,13 +212,13 @@ def create_search(request):
                     rating = int(int(rent[1])/float(rent[0]))
                 else:
                     rating = int((int(rent[1]) + purchase[1])/float(rent[0]+purchase[0]))
-
+                rows_with_rating.append(app+(rating, ))
             SearchDone = True
             return render(request,'store/search.html',
-                    {'form':form,'result':rows,'SearchDone':SearchDone,
+                    {'form':form,'result':rows_with_rating,'SearchDone':SearchDone,
                      'SearchName':form.cleaned_data['keyword'],
                      'SearchGenre':form.cleaned_data['types'],
-                     'username':username, 'rating': rating})
+                     'username':username,})
     else:
         form = SearchForm()
         return render(request,'store/search.html',{'form':form, 'username':username})
