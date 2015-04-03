@@ -20,7 +20,7 @@ class SearchForm(forms.Form):
 class FeedbackForm(forms.Form):
     @staticmethod
     def get_choices():
-        return [(0,'0'),(1,'1'),(2,'2'),(3,'3'),(4,'4'),(5,'5')]
+        return [(1,'1'),(2,'2'),(3,'3'),(4,'4'),(5,'5')]
     def __init__(self,*args,**kwargs):
         super(FeedbackForm,self).__init__(*args,**kwargs)
         self.fields['FeedbackBox'] = forms.CharField(label='Feedback ', required = False, widget=forms.Textarea(attrs={'cols': 60, 'rows': 10,}))

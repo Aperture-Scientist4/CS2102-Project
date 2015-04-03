@@ -11,6 +11,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.db import connection
 from store.models import Purchased, Rent, App
 
+import random, string
 
 
 def indexView(request):
@@ -146,16 +147,25 @@ def ProductPage(request, product_id):
                                                 'rentForm':rentForm,'othersRating':othersRating})
 
 def ProductPurchase(request, product_id):
-    if request.method == 'POST':
-        a = 1        
-    return HttpResponseRedirect('/store/product/'+product_id)
+    if request.user.is_authenticated():
+        if request.method == 'POST':
+            user = request.user.id;
+            orderid = ''.join(random.SystemRandom().choice(string.ascii_lowercase + string.digits) for _ in range(10));
+            cursor = connection.cursor()
+            cursor.execute("INSERT INTO store_purchased(userid_id, order_id, appid_id) VALUES (%d, '%s', %d);" % (int(user), orderid, int(product_id)))        
+        return HttpResponseRedirect('/store/product/'+product_id)
 
 def ProductRent(request, product_id):
-    if request.method == 'POST':
-        rentForm = RentForm(request.POST)
-        if rentForm.is_valid():
-            a = 1
-    return HttpResponseRedirect('/store/product/'+product_id)
+    if request.user.is_authenticated():
+        if request.method == 'POST':
+            rentForm = RentForm(request.POST)
+            if rentForm.is_valid():
+                user = request.user.id;
+                orderid = ''.join(random.SystemRandom().choice(string.ascii_lowercase + string.digits) for _ in range(10));
+                expire_date = rentForm.cleaned_data['DateBox']
+                cursor = connection.cursor()
+                cursor.execute("INSERT INTO store_rent(userid_id, order_id, appid_id, expire_date) VALUES (%d, '%s', %d, '%s');" % (int(user), orderid, int(product_id), expire_date))        
+        return HttpResponseRedirect('/store/product/'+product_id)
 
 def ProductFeedback(request, product_id):
     if request.method == 'POST':
