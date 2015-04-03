@@ -20,35 +20,35 @@
 <p>Device: {{appData.5}} </p>
 <p>Release Date: {{appData.6}} </p>
 <p>Description: {{appData.7}}</p>
-
-{% if purchased%}
-    <p>You have purchased this product. We are pleased to hear your feedback and rating.</p>
-    <form action="/store/product/{{appData.0}}/feedback/" method="post" onsubmit="return confirm('Confirm to submit your feedback?');">
-        {% csrf_token %}
-        {{feedbackForm.FeedbackBox}}<br/><br/>
-        <label>How would rate this app?</label>
-        {{feedbackForm.RatingBox}}<br/><br/>
-        <input type="submit" name="submit" value="Submit"/>
-    </form>
-{% else %}
-    <p>You have not purchased this product. Click "purchase" button below to buy it</p>
-    <form action="/store/product/{{appData.0}}/purchase/" method="post" onsubmit="return confirm('Confirm to make your payment?');">
-        {% csrf_token %}
-        <input type="submit" name="purchase" value="Purchase"/>
-    </form>
-    {% if rented %}
-        <p>Currently you have rented this item and it is due on {{dueDate}}</p>
-    {%else%}
-        <p>Alternately, you may wish to rent this product.</p>
-        <form action="/store/product/{{appData.0}}/rent/" method="post" onsubmit="return confirm('Confirm to make your payment?');">
+{% if user.is_authenticated %}
+    {% if purchased%}
+        <p>You have purchased this product. We are pleased to hear your feedback and rating.</p>
+        <form action="/store/product/{{appData.0}}/feedback/" method="post" onsubmit="return confirm('Confirm to submit your feedback?');">
             {% csrf_token %}
-            <label>Please select a returning date:<br/></label>
-            {{rentForm.DateBox}}
-            <input type="submit" name="Rent" value="Rent"/>
+            {{feedbackForm.FeedbackBox}}<br/><br/>
+            <label>How would rate this app?</label>
+            {{feedbackForm.RatingBox}}<br/><br/>
+            <input type="submit" name="submit" value="Submit"/>
         </form>
+    {% else %}
+        <p>You have not purchased this product. Click "purchase" button below to buy it</p>
+        <form action="/store/product/{{appData.0}}/purchase/" method="post" onsubmit="return confirm('Confirm to make your payment?');">
+            {% csrf_token %}
+            <input type="submit" name="purchase" value="Purchase"/>
+        </form>
+        {% if rented %}
+            <p>Currently you have rented this item and it is due on {{dueDate}}</p>
+        {%else%}
+            <p>Alternately, you may wish to rent this product.</p>
+            <form action="/store/product/{{appData.0}}/rent/" method="post" onsubmit="return confirm('Confirm to make your payment?');">
+                {% csrf_token %}
+                <label>Please select a returning date:<br/></label>
+                {{rentForm.DateBox}}
+                <input type="submit" name="Rent" value="Rent"/>
+            </form>
+        {% endif %}
     {% endif %}
 {% endif %}
-
 <h3>Other users experience and rating with this app</h3>
 {% if othersRating %}
     <dl>
