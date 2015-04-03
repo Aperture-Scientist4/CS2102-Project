@@ -11,7 +11,7 @@ class UserForm(forms.ModelForm):
 class SearchForm(forms.Form):
     @staticmethod
     def get_choices():
-        return [('Game','Game'),('Movie','Movie'),('App','App'),('TV show','TV show')]
+        return [('game','game'),('movie','movie'),('app','app'),('tv show','tv show')]
     def __init__(self,*args,**kwargs):
         super(SearchForm,self).__init__(*args,**kwargs)
         self.fields['keyword'] = forms.CharField(label='Keywords ', required = False)

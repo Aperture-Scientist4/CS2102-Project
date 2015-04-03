@@ -178,16 +178,24 @@ def create_search(request):
         username = 'Guest'
     if request.method == 'POST':
         form = SearchForm(request.POST)
-        keywords = request.POST.get('Keywords ')
-        genre = request.POST.get('Categary ')
-        cursor = connection.cursor()
-        #if (keywords == ''):
-        cursor.execute("SELECT a.appid, a.name, a.purchase_price FROM store_app a WHERE genre = 'game';")
-        #else :
-            
-            #cursor.execute("SELECT a.appid,a.name,a.purchase_price,a.device FROM store_app a WHERE genre = %r AND (name LIKE %r OR description LIKE %r);" % (genre,keywords,keywords))
-        rows = cursor.fetchall()
         if form.is_valid():
+            keywords = form.cleaned_data['keyword']
+            genre = form.cleaned_data['types']
+            cursor = connection.cursor()
+            if (keywords == ''):
+                cursor.execute("SELECT a.appid, a.name, a.purchase_price FROM store_app a WHERE genre = '%s';" % genre)
+            else :
+                cursor.execute("SELECT a.appid,a.name,a.purchase_price,a.device FROM store_app a WHERE genre = %r AND (name LIKE '%s' OR description LIKE '%s');" % (genre,'%'+keywords+'%','%'+keywords+'%'))
+            rows = cursor.fetchall() #return a list
+            #rating implementation
+            for app in rows: #app is a tuple
+                appid = app[0]
+                cursor.execute("SELECT COUNT(*), SUM(r.rating) FROM store_app a, store_rent r WHERE r.appid_id = a.appid AND a.appid = %d; " % int(appid))
+                rent = cursor.fetchone()
+                cursor.execute("SELECT COUNT(*), SUM(p.rating) FROM store_app a, store_purchased p WHERE p.appid_id = a.appid AND a.appid = %d;" % int(appid))
+                purchase = cursor.fetchone()
+                #rating = float(int(rent[1]) + int(purchase[1]))/float(rent[0]+purchase[0])
+
             SearchDone = True
             return render(request,'store/search.html',
                     {'form':form,'result':rows,'SearchDone':SearchDone,
