@@ -7,9 +7,9 @@
 </head>
 <body>
 
-<p align="right">Welcome,{{username}} 
-{% if user.is_authenticated %},<a href ="/store/{{username}}">My Home Page</a>{% else %}<a href ="/store/login">Login Here</a>{% endif %}</p>
-<a href ="/store/search/" >Back to search page</a>
+<p align="right">Welcome,{{username}}. 
+{% if user.is_authenticated %}<a href ="/store/{{username}}">User Portal</a>. <a href="/store/logout/">Logout</a>{% else %}<a href ="/store/login">Login Here</a>{% endif %}</p>
+<a href ="/store/search/" >Search page</a>
 {% if editable%}
 {% endif %}
 <h1>App Information<br/></h1>

@@ -172,7 +172,6 @@ def ErrorPage(request):
 #SearchPage View-->
 def create_search(request):
     if request.user.is_authenticated():
-        
         username = request.user.username
     else :
         username = 'Guest'
@@ -181,6 +180,7 @@ def create_search(request):
         if form.is_valid():
             keywords = form.cleaned_data['keyword']
             genre = form.cleaned_data['types']
+            rating = 0
             cursor = connection.cursor()
             if (keywords == ''):
                 cursor.execute("SELECT a.appid, a.name, a.purchase_price FROM store_app a WHERE genre = '%s';" % genre)

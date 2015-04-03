@@ -8,7 +8,8 @@
 <body>
 
 <p align="right">Welcome,{{username}}. 
-{% if user.is_authenticated %},<a href ="/store/{{username}}">My Home Page</a>{% else %}<a href ="/store/login">Login Here</a>{% endif %}</p>
+{% if user.is_authenticated %}<a href ="/store/{{username}}">User Portal</a>. <a href="/store/logout/">Logout</a>{% else %}<a href ="/store/login">Login Here</a>{% endif %}</p>
+<a href="/store/">Home Page</a></br>
 <h1>Search Page Home<br/></h1>
 <form action="/store/search/" method="post">
     {% csrf_token %}
@@ -16,15 +17,15 @@
     <input type="submit" name="submit" value="Submit"/>
 </form>
 {% if SearchDone %}
-    <h3>The search result for "{{SearchName}}" on the genre "{{SearchGenre}}:"</h3>
+    <h3>The search result for "{{SearchName}}" on the genre "{{SearchGenre}}":</h3>
 {% endif %}
 
 {% if result %}
-    <table border = "1">
+    <table border = "0">
         <tr>
-            <td>App Name </td>
-            <td>Price </td>
-            <td>Rating </td>
+            <th>App Name </th>
+            <th>Price </th>
+            <th>Rating </th>
         </tr>
         {% for row in result %}
         <tr>
