@@ -192,10 +192,11 @@ def create_search(request):
             genre = form.cleaned_data['types']
             rows_with_rating = list()
             cursor = connection.cursor()
-            if (keywords == ''):
+            if keywords == '':
                 cursor.execute("SELECT a.appid, a.name, a.purchase_price FROM store_app a WHERE genre = '%s';" % genre)
             else :
-                cursor.execute("SELECT a.appid,a.name,a.purchase_price,a.device FROM store_app a WHERE genre = %r AND (name LIKE '%s' OR description LIKE '%s');" % (genre,'%'+keywords+'%','%'+keywords+'%'))
+                cursor.execute("SELECT a.appid,a.name,a.purchase_price FROM store_app a WHERE genre = %r AND (name LIKE '%s' OR description LIKE '%s');" % (genre,'%'+keywords+'%','%'+keywords+'%'))
+            
             rows = cursor.fetchall() #return a list
             #rating implementation
             for app in rows: #app is a tuple
@@ -213,12 +214,13 @@ def create_search(request):
                 else:
                     rating = int((int(rent[1]) + purchase[1])/float(rent[0]+purchase[0]))
                 rows_with_rating.append(app+(rating, ))
+            
             SearchDone = True
             return render(request,'store/search.html',
                     {'form':form,'result':rows_with_rating,'SearchDone':SearchDone,
                      'SearchName':form.cleaned_data['keyword'],
                      'SearchGenre':form.cleaned_data['types'],
-                     'username':username,})
+                     'username':username})
     else:
         form = SearchForm()
         return render(request,'store/search.html',{'form':form, 'username':username})
