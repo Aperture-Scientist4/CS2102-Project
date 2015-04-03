@@ -20,7 +20,7 @@
 <p>Device: {{appData.5}} </p>
 <p>Release Date: {{appData.6}} </p>
 <p>Description: {{appData.7}}</p>
-{% if user.is_authenticated %}
+
     {% if purchased%}
         <p>You have purchased this product. We are pleased to hear your feedback and rating.</p>
         <form action="/store/product/{{appData.0}}/feedback/" method="post" onsubmit="return confirm('Confirm to submit your feedback?');">
@@ -48,7 +48,7 @@
             </form>
         {% endif %}
     {% endif %}
-{% endif %}
+
 <h3>Other users experience and rating with this app</h3>
 {% if othersRating %}
     <dl>
