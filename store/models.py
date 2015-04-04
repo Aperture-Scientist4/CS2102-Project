@@ -7,7 +7,7 @@ class App(models.Model):
 		('G','Game'),
 		('M','Movie'),
 		('A',"App"),
-		('T',"TV Show")
+		('T',"TVShow")
 	)
 	appid = models.PositiveIntegerField(primary_key=True)
 	name = models.CharField(max_length=32)

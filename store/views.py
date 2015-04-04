@@ -199,18 +199,19 @@ def create_search(request):
             cursor = connection.cursor()
             if genre=='all':
                 if keywords == '':
-                    cursor.execute("SELECT a.appid, a.name, a.purchase_price FROM store_app a;")
+                    cursor.execute("SELECT a.appid, a.name, a.purchase_price, a.genre FROM store_app a;")
                 else :
-                    cursor.execute("SELECT a.appid,a.name,a.purchase_price FROM store_app a WHERE (name LIKE '%s' OR description LIKE '%s');" % ('%'+keywords+'%','%'+keywords+'%'))
+                    cursor.execute("SELECT a.appid,a.name,a.purchase_price, a.genre FROM store_app a WHERE (name LIKE '%s' OR description LIKE '%s');" % ('%'+keywords+'%','%'+keywords+'%'))
             else:
                 if keywords == '':
-                    cursor.execute("SELECT a.appid, a.name, a.purchase_price FROM store_app a WHERE genre = '%s';" % genre)
+                    cursor.execute("SELECT a.appid, a.name, a.purchase_price, a.genre FROM store_app a WHERE genre = '%s';" % genre)
                 else :
-                    cursor.execute("SELECT a.appid,a.name,a.purchase_price FROM store_app a WHERE genre = %r AND (name LIKE '%s' OR description LIKE '%s');" % (genre,'%'+keywords+'%','%'+keywords+'%'))                
+                    cursor.execute("SELECT a.appid,a.name,a.purchase_price, a.genre FROM store_app a WHERE genre = %r AND (name LIKE '%s' OR description LIKE '%s');" % (genre,'%'+keywords+'%','%'+keywords+'%'))                
             rows = cursor.fetchall() #return a list
             #rating implementation
             for app in rows: #app is a tuple
                 appid = app[0]
+                random_picture = str(random.randint(1,8))
                 cursor.execute("SELECT COUNT(*), SUM(r.rating) FROM store_app a, store_rent r WHERE r.rating > 0 AND r.appid_id = a.appid AND a.appid = %d; " % int(appid))
                 rent = cursor.fetchone()
                 cursor.execute("SELECT COUNT(*), SUM(p.rating) FROM store_app a, store_purchased p WHERE p.rating > 0 AND p.appid_id = a.appid AND a.appid = %d;" % int(appid))
@@ -223,13 +224,14 @@ def create_search(request):
                     rating = int(int(rent[1])/float(rent[0]))
                 else:
                     rating = int((int(rent[1]) + purchase[1])/float(rent[0]+purchase[0]))
-                rows_with_rating.append(app+(rating, ))
+                stars = rating*"x";
+                rows_with_rating.append(app+(stars, )+(random_picture,))
             SearchDone = True
             return render(request,'store/search.html',
                     {'form':form,'result':rows_with_rating,'SearchDone':SearchDone,
                      'SearchName':form.cleaned_data['keyword'],
                      'SearchGenre':form.cleaned_data['types'],
-                     'username':username,})
+                     'username':username})
     else:
         form = SearchForm()
         return render(request,'store/search.html',{'form':form, 'username':username})
