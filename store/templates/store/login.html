@@ -1,21 +1,31 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 <html>
     <head>
+        <meta charset="UTF-8">
         <title>uTunes Login</title>
+        
+        <link rel="stylesheet" type="text/css" href="{% static 'store/style_login.css' %}" />
     </head>
 
     <body>
-        <h1>Login to uTunes</h1>
+        <div class="login-card">
+        <h1>uTunes Login</h1>
 
         <form id="login_form" method="post" action="/store/login/">
             {% csrf_token %}
-            Username: <input type="text" name="username" value="" size="50" />
+            Username: <input type="text" name="username" value="" placeholder="Username" size="50" />
             <br />
-            Password: <input type="password" name="password" value="" size="50" />
+            Password: <input type="password" name="password" value="" placeholder="Password" size="50" />
             <br />
 
-            <input type="submit" value="submit" />
+            <input type="submit" class="login login-submit" value="submit" />
         </form>
+        <div class="login-help">
+        <a href="/store/register">Register Here</a>
+        </div>
+        
+        </div>
 
     </body>
 </html>
