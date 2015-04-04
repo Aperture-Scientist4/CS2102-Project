@@ -186,10 +186,6 @@ def ErrorPage(request):
 
 #SearchPage View-->
 def create_search(request):
-    if request.user.is_authenticated():
-        username = request.user.username
-    else :
-        username = 'Guest'
     if request.method == 'POST':
         form = SearchForm(request.POST)
         if form.is_valid():
@@ -216,6 +212,11 @@ def create_search(request):
                 rent = cursor.fetchone()
                 cursor.execute("SELECT COUNT(*), SUM(p.rating) FROM store_app a, store_purchased p WHERE p.rating > 0 AND p.appid_id = a.appid AND a.appid = %d;" % int(appid))
                 purchase = cursor.fetchone()
+                is_purchased = False
+                if request.user.is_authenticated():
+                    userid = request.user.id
+                    cursor.execute("SELECT COUNT(*) FROM store_purchased p WHERE p.appid_id = %d AND p.userid_id = %d;" % (int(appid), int(userid)))
+                    is_purchased = (cursor.fetchone()[0] == 1)
                 if rent[0]+purchase[0] == 0:
                     rating = 0
                 elif rent[0] == 0:
@@ -225,16 +226,15 @@ def create_search(request):
                 else:
                     rating = int((int(rent[1]) + purchase[1])/float(rent[0]+purchase[0]))
                 stars = rating*"x";
-                rows_with_rating.append(app+(stars, )+(random_picture,))
+                rows_with_rating.append(app+(stars, random_picture, is_purchased))
             SearchDone = True
             return render(request,'store/search.html',
                     {'form':form,'result':rows_with_rating,'SearchDone':SearchDone,
                      'SearchName':form.cleaned_data['keyword'],
-                     'SearchGenre':form.cleaned_data['types'],
-                     'username':username})
+                     'SearchGenre':form.cleaned_data['types']})
     else:
         form = SearchForm()
-        return render(request,'store/search.html',{'form':form, 'username':username})
+        return render(request,'store/search.html',{'form':form})
 #<--SearchPage View
 
 @login_required
