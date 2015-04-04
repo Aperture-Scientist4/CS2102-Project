@@ -15,7 +15,8 @@ import random, string
 
 
 def indexView(request):
-    return render(request, 'store/index.html', {})
+    form = SearchForm()
+    return render(request, 'store/index.html', {'form':form})
 
 def register(request):
     registered = False
@@ -196,10 +197,16 @@ def create_search(request):
             genre = form.cleaned_data['types']
             rows_with_rating = list()
             cursor = connection.cursor()
-            if (keywords == ''):
-                cursor.execute("SELECT a.appid, a.name, a.purchase_price FROM store_app a WHERE genre = '%s';" % genre)
-            else :
-                cursor.execute("SELECT a.appid,a.name,a.purchase_price,a.device FROM store_app a WHERE genre = %r AND (name LIKE '%s' OR description LIKE '%s');" % (genre,'%'+keywords+'%','%'+keywords+'%'))
+            if genre=='all':
+                if keywords == '':
+                    cursor.execute("SELECT a.appid, a.name, a.purchase_price FROM store_app a;")
+                else :
+                    cursor.execute("SELECT a.appid,a.name,a.purchase_price FROM store_app a WHERE (name LIKE '%s' OR description LIKE '%s');" % ('%'+keywords+'%','%'+keywords+'%'))
+            else:
+                if keywords == '':
+                    cursor.execute("SELECT a.appid, a.name, a.purchase_price FROM store_app a WHERE genre = '%s';" % genre)
+                else :
+                    cursor.execute("SELECT a.appid,a.name,a.purchase_price FROM store_app a WHERE genre = %r AND (name LIKE '%s' OR description LIKE '%s');" % (genre,'%'+keywords+'%','%'+keywords+'%'))                
             rows = cursor.fetchall() #return a list
             #rating implementation
             for app in rows: #app is a tuple
