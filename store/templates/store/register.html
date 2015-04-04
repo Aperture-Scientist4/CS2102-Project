@@ -1,17 +1,21 @@
+{% load staticfiles %}
 <!DOCTYPE html>
 <html>
     <head>
+        <meta charset="UTF-8">
         <title>uTunes Registration</title>
+
+        <link rel="stylesheet" type="text/css" href="{% static 'store/style_register.css' %}" />
     </head>
 
     <body>
-        <h1>User Registration</h1>
+    <div class="register-card">
+        <h1>Registration</h1>
 
         {% if registered %}
         <strong>Thank you for registering!</strong>
         <a href="/store/">Return to the homepage.</a><br />
         {% else %}
-        <strong>Register here!</strong><br />
 
         <form id="user_form" method="post" action="/store/register/"
                 enctype="multipart/form-data">
@@ -20,8 +24,9 @@
 
             {{ user_form.as_p }}
 
-            <input type="submit" name="submit" value="Register" />
+            <input type="submit" name="submit" class="login login-submit" value="Register" />
         </form>
         {% endif %}
+    </div>
     </body>
 </html>
