@@ -25,16 +25,3 @@ class FeedbackForm(forms.Form):
         super(FeedbackForm,self).__init__(*args,**kwargs)
         self.fields['review'] = forms.CharField(label='Feedback', required = False, widget=forms.Textarea(attrs={'cols': 60, 'rows': 10, 'placeholder': 'Review'}))
         self.fields['rating'] = forms.ChoiceField(label='Rating',widget=forms.RadioSelect, choices=FeedbackForm.get_choices())
-
-class AppEditForm(forms.Form):
-    @staticmethod
-    def get_Device():
-        return [('1','1'),('2','2')]
-    def __init__(self,*args,**kwargs):
-        super(AppEditForm,self).__init__(*args,**kwargs)
-        self.fields['AppName'] = forms.CharField(required=True)
-        self.fields['RetailPrice'] = forms.DecimalField(required=True)
-        self.fields['RentPrice'] = forms.DecimalField(required=False)
-        self.fields['Genre'] = forms.ChoiceField(choices = FeedbackForm.get_choices())
-        self.fields['ReleaseDate'] = forms.DateField(required=False)
-        self.fields['Description'] = forms.CharField(required = False, widget=forms.Textarea(attrs={'cols': 60, 'rows':10,}))

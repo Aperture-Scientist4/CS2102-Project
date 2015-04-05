@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from store.forms import UserForm
 from store.forms import SearchForm
-from store.forms import FeedbackForm,AppEditForm
+from store.forms import FeedbackForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.http import HttpResponseRedirect, HttpResponse
