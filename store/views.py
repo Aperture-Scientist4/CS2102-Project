@@ -159,9 +159,10 @@ def ProductPurchase(request, product_id):
     if request.user.is_authenticated():
         if request.method == 'POST':
             userid = request.user.id
-            orderid = ''.join(random.SystemRandom().choice(string.ascii_lowercase + string.digits) for _ in range(10))
-            cursor = connection.cursor()
-            cursor.execute("INSERT INTO store_purchased(userid_id, order_id, appid_id) VALUES (%d, '%s', %d);" % (int(userid), orderid, int(product_id)))        
+            if not is_valid_rent(product_id, userid):
+                orderid = ''.join(random.SystemRandom().choice(string.ascii_lowercase + string.digits) for _ in range(10))
+                cursor = connection.cursor()
+                cursor.execute("INSERT INTO store_purchased(userid_id, order_id, appid_id) VALUES (%d, '%s', %d);" % (int(userid), orderid, int(product_id)))        
         return HttpResponseRedirect('/store/product/'+product_id)
     else :
         return render(request, 'store/login.html', {})
@@ -171,10 +172,11 @@ def ProductRent(request, product_id):
     if request.user.is_authenticated():
         if request.method == 'POST':
             userid = request.user.id
-            orderid = ''.join(random.SystemRandom().choice(string.ascii_lowercase + string.digits) for _ in range(10));
-            expire_date = (datetime.date.today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d')
-            cursor = connection.cursor()
-            cursor.execute("INSERT INTO store_rent(userid_id, order_id, appid_id, expire_date) VALUES (%d, '%s', %d, '%s');" % (int(userid), orderid, int(product_id), expire_date))        
+            if not is_valid_rent(product_id, userid):
+                orderid = ''.join(random.SystemRandom().choice(string.ascii_lowercase + string.digits) for _ in range(10));
+                expire_date = (datetime.date.today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d')
+                cursor = connection.cursor()
+                cursor.execute("INSERT INTO store_rent(userid_id, order_id, appid_id, expire_date) VALUES (%d, '%s', %d, '%s');" % (int(userid), orderid, int(product_id), expire_date))        
         return HttpResponseRedirect('/store/product/'+product_id)
     else:
         return render(request, 'store/login.html', {})
