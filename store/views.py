@@ -48,7 +48,6 @@ def user_login(request):
             login(request, user)
             return HttpResponseRedirect('/store/')
         else:
-            print ("Invalid login details: {0}, {1}".format(username, password))
             return HttpResponse("Invalid login!")
 
     else:
@@ -56,8 +55,8 @@ def user_login(request):
         return render(request, 'store/login.html', {})
 
 
-@login_required
-def restricted(request, user_name):
+@login_required(login_url='/store/login/')
+def my_account(request, user_name):
     if request.user.username != user_name :
         return HttpResponse("You are not allowed to access this page!")
     user = User.objects.get(username = user_name)
@@ -73,7 +72,7 @@ def restricted(request, user_name):
     cursor.execute("SELECT a.appid, a.name, a.genre, a.icon, r.expire_date FROM store_app a, store_rent r WHERE r.appid_id = a.appid AND r.userid_id = %d;" % int(user.id))
     app_list_rent = cursor.fetchall()
     for i in range(len(app_list_rent)):
-        is_reviewed = is_rated(app_list_purchased[i][0], user.id)
+        is_reviewed = is_rated(app_list_rent[i][0], user.id)
         random_picture = str(random.randint(51,70))
         app_list_rent[i] += (is_reviewed, random_picture)
     context_dict['app_list_purchased'] = app_list_purchased
@@ -155,7 +154,7 @@ def ProductPage(request, product_id):
     feedback_form = FeedbackForm()
     return render(request,'store/product.html',{'app_data':app_data,'purchased':is_purchased,'rent':is_rent,'expire_date':expire_date,
                                                 'feedback_form':feedback_form,'rating_entries':rating_entries, 'search_form': search_form, 'reviewed': is_reviewed})
-
+@login_required(login_url='/store/login/')
 def ProductPurchase(request, product_id):
     if request.user.is_authenticated():
         if request.method == 'POST':
@@ -167,6 +166,7 @@ def ProductPurchase(request, product_id):
     else :
         return render(request, 'store/login.html', {})
 
+@login_required(login_url='/store/login/')
 def ProductRent(request, product_id):
     if request.user.is_authenticated():
         if request.method == 'POST':
@@ -179,6 +179,7 @@ def ProductRent(request, product_id):
     else:
         return render(request, 'store/login.html', {})
 
+@login_required
 def ProductFeedback(request, product_id):
     if request.method == 'POST':
         feedbackForm = FeedbackForm(request.POST)

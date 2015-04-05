@@ -52,7 +52,7 @@ http://www.templatemo.com/preview/templatemo_417_grill
                                     <a href="/store/logout/">Logout</a>
                                     {% else %}
                                     <a href="/store/register/">Sign Up</a> /
-                                    <a href="/store/login/">Log In</a>
+                                    <a href="/store/login/?next={{request.path}}">Log In</a>
                                     {% endif %}
                                 </div>
                             </div>
@@ -175,7 +175,7 @@ http://www.templatemo.com/preview/templatemo_417_grill
                                         </div>
                                         <div class="col-md-3 col-md-offset-1">
                                             <div class="side-bar">
-                                                {% if user.is_authenticated %}
+                                                
                                                 <div class="news-letters">
                                                     <h4>Option</h4>
                                                     <div class="archives-list">
@@ -202,7 +202,7 @@ http://www.templatemo.com/preview/templatemo_417_grill
                                                     </div>        
                                                 </div>
                                                 </br>
-                                                {% endif %}
+                                                
                                                 <div class="recent-post">
                                                     <h4>Product Information</h4>
                                                     <div class="posts">

@@ -13,7 +13,7 @@ urlpatterns = patterns('',
     url(r'^product/(?P<product_id>\d+)/feedback/$', views.ProductFeedback,name='ProductFeedback'),
     url(r'^product/(?P<product_id>\d+)/purchase/$', views.ProductPurchase,name='ProductPurchase'),
     url(r'^product/(?P<product_id>\d+)/rent/$', views.ProductRent,name='ProductRent'),
-    url(r'^user/(?P<user_name>[\w\-]+)/$', views.restricted, name='restricted'),
+    url(r'^user/(?P<user_name>[\w\-]+)/$', views.my_account, name='my_account'),
     url(r'^user/(?P<user_name>[\w\-]+)/changePassword/$', views.password_change, name='changePassword'),
     url(r'^user/(?P<user_name>[\w\-]+)/review/(?P<orderid>[\w\-]+)/$', views.rate_review, name='reviewRate'),
     )
