@@ -151,14 +151,18 @@ http://www.templatemo.com/preview/templatemo_417_grill
                                                         {% csrf_token %}
                                                         <div class="row">
                                                         <div class="email col-md-4">
-                                                            <label>My rating: </label>{{feedbackForm.rating}}
+                                                            {% for radio in feedback_form.rating %}
+                                                                <label for="{{ radio.id_for_label }}">
+                                                                    {{ radio.choice_label }}
+                                                                    <span class="radio">{{ radio.tag }}</span>
+                                                                </label>
+                                                            {% endfor %}
                                                         </div>
                                                         
                                                         </div>
                                                         <div class="row">        
                                                             <div class="text col-md-12">
-                                                                <label>Review: </label>
-                                                                {{feedbackForm.review}}
+                                                                {{feedback_form.review}}
                                                             </div>   
                                                         </div>                              
                                                         <div class="send">
@@ -178,23 +182,29 @@ http://www.templatemo.com/preview/templatemo_417_grill
                                                         {% if purchased %}
                                                             <p>You have purchased this item.</p>
                                                         {% else %}
-                                                            <form action="/store/product/{{app_data.0}}/purchase/" method="post" onsubmit="return confirm('Confirm to make your payment?');">
-                                                                {% csrf_token %}
-                                                                <button type="submit" name="purchase" value="Purchase" >Purchase</button>
-                                                            </form>
                                                             {% if app_data.3 %}
                                                                 {% if rent %}
+                                                                    <form action="/store/product/{{app_data.0}}/purchase/" method="post" onsubmit="return confirm('Confirm to make your payment?');">
+                                                                    {% csrf_token %}
+                                                                    <button type="submit" name="purchase" value="Purchase" class="btn btn-default">Purchase</button>
+                                                                    </form>
                                                                     <p>Currently you have rented this item and it is due on {{expire_date}}.</p>
                                                                 {%else%}
+                                                                    <form action="/store/product/{{app_data.0}}/purchase/" method="post" onsubmit="return confirm('Confirm to make your payment?');">
+                                                                        {% csrf_token %}
+                                                                        <button type="submit" name="purchase" value="Purchase" class="btn btn-primary btn-block">Purchase for ${{app_data.2}}</button>
+                                                                    </form>
+                                                                    </br>
                                                                     <form action="/store/product/{{app_data.0}}/rent/" method="post" onsubmit="return confirm('Confirm to make your payment?');">
                                                                         {% csrf_token %}
-                                                                        <button type="submit" name="rent" value="Rent">Rent</button>
+                                                                        <button type="submit" name="rent" value="Rent" class="btn btn-success btn-block">7-Day Rental for ${{app_data.3}}</button>
                                                                     </form>
                                                                 {% endif %}
                                                             {% endif %}
                                                         {% endif %}
                                                     </div>        
                                                 </div>
+                                                </br>
                                                 {% endif %}
                                                 <div class="recent-post">
                                                     <h4>Product Information</h4>

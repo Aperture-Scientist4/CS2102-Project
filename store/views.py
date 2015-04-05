@@ -152,9 +152,9 @@ def ProductPage(request, product_id):
 
     
     search_form = SearchForm()
-    feedbackForm = FeedbackForm()
+    feedback_form = FeedbackForm()
     return render(request,'store/product.html',{'app_data':app_data,'purchased':is_purchased,'rent':is_rent,'expire_date':expire_date,
-                                                'feedbackForm':feedbackForm,'rating_entries':rating_entries, 'search_form': search_form, 'reviewed': is_reviewed})
+                                                'feedback_form':feedback_form,'rating_entries':rating_entries, 'search_form': search_form, 'reviewed': is_reviewed})
 
 def ProductPurchase(request, product_id):
     if request.user.is_authenticated():
@@ -187,7 +187,10 @@ def ProductFeedback(request, product_id):
             rating = feedbackForm.cleaned_data['rating']
             review = feedbackForm.cleaned_data['review']
             cursor = connection.cursor()
-            cursor.execute("UPDATE store_purchased SET rating = %d, review = '%s' WHERE userid_id = %d AND appid_id = %d;" % (int(rating), review, int(userid), int(product_id)))        
+            if is_valid_purchase(product_id, userid):
+                cursor.execute("UPDATE store_purchased SET rating = %d, review = '%s' WHERE userid_id = %d AND appid_id = %d;" % (int(rating), review, int(userid), int(product_id)))        
+            else:
+                cursor.execute("UPDATE store_rent SET rating = %d, review = '%s' WHERE userid_id = %d AND appid_id = %d LIMIT 1;" % (int(rating), review, int(userid), int(product_id)))        
     return HttpResponseRedirect('/store/product/'+product_id)
 
 def ErrorPage(request):
