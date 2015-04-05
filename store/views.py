@@ -80,7 +80,7 @@ def restricted(request, user_name):
     context_dict['app_list_purchased'] = app_list_purchased
     context_dict['app_list_rent'] = app_list_rent
 
-    return render(request, 'store/restricted.html', context_dict)
+    return render(request, 'store/restricted_new.html', context_dict)
 
 @login_required
 def user_logout(request):
