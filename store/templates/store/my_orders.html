@@ -78,7 +78,7 @@ http://www.templatemo.com/preview/templatemo_417_grill
                                 <div class="search-box">
                                     <form name="search_form" class="search_form" action="/store/search/" method="post">
                                         {% csrf_token %}
-                                        {{form.keyword}}
+                                        {{search_form.keyword}}
                                         <input type="hidden" id="id_types" name="types" value='all' type="text">
                                         <input type="submit" id="search-button"/>
                                     </form>  
@@ -121,8 +121,8 @@ http://www.templatemo.com/preview/templatemo_417_grill
                         </div>
                     </div>
                     <div class="row" id="Container" style="margin-top: 0px;">
-                        {% if app_list_purchased %}
-                            {% for row in app_list_purchased %}
+                        {% if context_dict.app_list_purchased %}
+                            {% for row in context_dict.app_list_purchased %}
                                 <div class="col-md-3 col-sm-6 mix portfolio-item purchased">
                                     <div class="portfolio-wrapper">                
                                         <div class="portfolio-thumb">
@@ -139,8 +139,8 @@ http://www.templatemo.com/preview/templatemo_417_grill
                             
                         {% endif %}
 
-                        {% if app_list_rent %}
-                            {% for row in app_list_rent %}
+                        {% if context_dict.app_list_rent %}
+                            {% for row in context_dict.app_list_rent %}
                                 <div class="col-md-3 col-sm-6 mix portfolio-item rent">
                                     <div class="portfolio-wrapper">                
                                         <div class="portfolio-thumb">

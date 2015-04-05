@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from store.forms import UserForm
 from store.forms import SearchForm
-from store.forms import RentForm,FeedbackForm,AppEditForm
+from store.forms import FeedbackForm,AppEditForm
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.http import HttpResponseRedirect, HttpResponse
@@ -11,12 +11,12 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.db import connection
 from store.models import Purchased, Rent, App
 
-import random, string
+import random, string, datetime
 
 
 def indexView(request):
-    form = SearchForm()
-    return render(request, 'store/index.html', {'form':form})
+    search_form = SearchForm()
+    return render(request, 'store/index.html', {'search_form':search_form})
 
 def register(request):
     registered = False
@@ -92,8 +92,8 @@ def restricted(request, user_name):
     '''
     context_dict['app_list_purchased'] = app_list_purchased
     context_dict['app_list_rent'] = app_list_rent
-
-    return render(request, 'store/my_orders.html', context_dict)
+    search_form = SearchForm()
+    return render(request, 'store/my_orders.html', {'context_dict': context_dict,'search_form':search_form})
 
 @login_required
 def user_logout(request):
@@ -131,42 +131,54 @@ def password_change(request,user_name):
         return render(request, 'store/changePassword.html', context_dict)
 
 #ProdcutPage views-->
-def ProductEdit(request, product_id):
-    if request.method == 'POST':
-        form = AppEditForm()
-    else:
-        return render(request,'store/AppEdit.html',{'form':form})
+
 
 def ProductPage(request, product_id):
     cursor = connection.cursor()
+
     app = App.objects.get(appid = product_id)
+    expire_date = False
+
     if request.user.is_authenticated():
         user = User.objects.get(username = request.user.username)
         username = request.user.username
-        cursor.execute("SELECT COUNT(*) FROM store_purchased WHERE userid_id = %s AND appid_id =%d" % (user.id, int(product_id)))
+        
+        cursor.execute("SELECT COUNT(*) FROM store_purchased WHERE userid_id = %d AND appid_id =%d" % (int(user.id), int(product_id)))
         num = cursor.fetchone()[0]
         if num > 0 :
             purchased = True
         else :
             purchased = False
+        
+        cursor.execute("SELECT COUNT(*) FROM store_rent WHERE userid_id = %d AND appid_id =%d" % (int(user.id), int(product_id)))
+        num = cursor.fetchone()[0]
+        if num > 0 :
+            rent = True
+            cursor.execute("SELECT expire_date FROM store_rent WHERE userid_id = %d AND appid_id =%d" % (int(user.id), int(product_id)))
+            expire_date = cursor.fetchone()[0]
+        else :
+            rent = False
+
     else :
         purchased = False
-        username = 'Guest'
-    rentForm = RentForm()
+        rent = False
+    
     feedbackForm = FeedbackForm()
-    othersRating = cursor.execute("SELECT a.username, s.rating, s.review FROM store_purchased s, auth_user a WHERE s.appid_id = %d AND s.userid_id = a.id" % int(product_id))
+    cursor.execute("SELECT a.username, s.rating, s.review FROM store_purchased s, auth_user a WHERE s.appid_id = %d AND s.userid_id = a.id AND s.rating > 0" % int(product_id))
+    othersRating = cursor.fetchall()
     appData = [app.appid, app.name,app.purchase_price, app.rent_price,app.genre,app.device,app.release_date,app.description]
-    return render(request,'store/product.html',{'username':username,'appData':appData,'purchased':purchased,
-                                                'feedbackForm':feedbackForm,
-                                                'rentForm':rentForm,'othersRating':othersRating})
+    search_form = SearchForm()
+
+    return render(request,'store/product.html',{'username':username,'appData':appData,'purchased':purchased,'rent':rent,'expire_date':expire_date,
+                                                'feedbackForm':feedbackForm,'othersRating':othersRating, 'search_form': search_form})
 
 def ProductPurchase(request, product_id):
     if request.user.is_authenticated():
         if request.method == 'POST':
-            user = request.user.id;
+            userid = request.user.id;
             orderid = ''.join(random.SystemRandom().choice(string.ascii_lowercase + string.digits) for _ in range(10));
             cursor = connection.cursor()
-            cursor.execute("INSERT INTO store_purchased(userid_id, order_id, appid_id) VALUES (%d, '%s', %d);" % (int(user), orderid, int(product_id)))        
+            cursor.execute("INSERT INTO store_purchased(userid_id, order_id, appid_id) VALUES (%d, '%s', %d);" % (int(userid), orderid, int(product_id)))        
         return HttpResponseRedirect('/store/product/'+product_id)
     else :
         return render(request, 'store/login.html', {})
@@ -174,13 +186,11 @@ def ProductPurchase(request, product_id):
 def ProductRent(request, product_id):
     if request.user.is_authenticated():
         if request.method == 'POST':
-            rentForm = RentForm(request.POST)
-            if rentForm.is_valid():
-                user = request.user.id;
-                orderid = ''.join(random.SystemRandom().choice(string.ascii_lowercase + string.digits) for _ in range(10));
-                expire_date = rentForm.cleaned_data['DateBox']
-                cursor = connection.cursor()
-                cursor.execute("INSERT INTO store_rent(userid_id, order_id, appid_id, expire_date) VALUES (%d, '%s', %d, '%s');" % (int(user), orderid, int(product_id), expire_date))        
+            userid = request.user.id;
+            orderid = ''.join(random.SystemRandom().choice(string.ascii_lowercase + string.digits) for _ in range(10));
+            expire_date = (datetime.datetime.now()+datetime.timedelta(days=7)).strftime('%Y-%m-%d')
+            cursor = connection.cursor()
+            cursor.execute("INSERT INTO store_rent(userid_id, order_id, appid_id, expire_date) VALUES (%d, '%s', %d, '%s');" % (int(userid), orderid, int(product_id), expire_date))        
         return HttpResponseRedirect('/store/product/'+product_id)
     else:
         return render(request, 'store/login.html', {})
@@ -200,10 +210,10 @@ def ErrorPage(request):
 #SearchPage View-->
 def create_search(request):
     if request.method == 'POST':
-        form = SearchForm(request.POST)
-        if form.is_valid():
-            keywords = form.cleaned_data['keyword']
-            genre = form.cleaned_data['types']
+        search_form = SearchForm(request.POST)
+        if search_form.is_valid():
+            keywords = search_form.cleaned_data['keyword']
+            genre = search_form.cleaned_data['types']
             rows_with_rating = list()
             cursor = connection.cursor()
             if genre=='all':
@@ -242,12 +252,12 @@ def create_search(request):
                 rows_with_rating.append(app+(stars, is_purchased, random_picture))
             SearchDone = True
             return render(request,'store/search.html',
-                    {'form':form,'result':rows_with_rating,'SearchDone':SearchDone,
-                     'SearchName':form.cleaned_data['keyword'],
-                     'SearchGenre':form.cleaned_data['types']})
+                    {'search_form':search_form,'result':rows_with_rating,'SearchDone':SearchDone,
+                     'SearchName':keywords,
+                     'SearchGenre':genre})
     else:
-        form = SearchForm()
-        return render(request,'store/search.html',{'form':form})
+        search_form = SearchForm()
+        return render(request,'store/search.html',{'search_form':search_form})
 #<--SearchPage View
 
 @login_required
@@ -272,4 +282,3 @@ def rate_review(request, user_name, orderid) :
 
     else:
         return render(request, 'store/review.html', context_dict)
-      

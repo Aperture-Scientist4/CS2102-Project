@@ -78,7 +78,7 @@ http://www.templatemo.com/preview/templatemo_417_grill
                                 <div class="search-box">
 	                                <form name="search_form" class="search_form" action="/store/search/" method="post">
 									    {% csrf_token %}
-									    {{form.keyword}}
+									    {{search_form.keyword}}
 									    <input type="hidden" id="id_types" name="types" value='all' type="text">
 									    <input type="submit" id="search-button"/>
 									</form>  

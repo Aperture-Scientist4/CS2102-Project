@@ -1,67 +1,324 @@
 <!DOCTYPE html>
+{% load staticfiles %}
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
 
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="utf-8" />
-    <title></title>
-</head>
-<body>
+<!-- templatemo 417 grill -->
+<!-- 
+Grill Template 
+http://www.templatemo.com/preview/templatemo_417_grill 
+-->
+    <head>
+        <meta charset="utf-8">
+        <title>Blog - Grill Template</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
 
-<p align="right">Welcome,{{username}}. 
-{% if user.is_authenticated %}<a href ="/store/user/{{username}}">User Portal</a>. <a href="/store/logout/">Logout</a>{% else %}<a href ="/store/login">Login Here</a>{% endif %}</p>
-<a href ="/store/search/" >Search page</a>
-{% if editable%}
-{% endif %}
-<h1>App Information<br/></h1>
-<h2>Name: {{appData.1}}<br/></h2>
-<p>Retail Price: {{appData.2}}</p>
-<p>Rental Price: {{appData.3}}</p>
-<p>Genre: {{appData.4}}</p>
-<p>Device: {{appData.5}} </p>
-<p>Release Date: {{appData.6}} </p>
-<p>Description: {{appData.7}}</p>
+        <link rel="stylesheet" href="{% static 'store/css/bootstrap.css' %}">
+        <link rel="stylesheet" href="{% static 'store/css/font-awesome.css' %}">
+        <link rel="stylesheet" href="{% static 'store/css/templatemo_style.css' %}">
+        <link rel="stylesheet" href="{% static 'store/css/templatemo_misc.css' %}">
+        <link rel="stylesheet" href="{% static 'store/css/flexslider.css' %}">
+        <link rel="stylesheet" href="{% static 'store/css/testimonails-slider.css' %}">
 
-    {% if purchased%}
-        <p>You have purchased this product. We are pleased to hear your feedback and rating.</p>
-        <form action="/store/product/{{appData.0}}/feedback/" method="post" onsubmit="return confirm('Confirm to submit your feedback?');">
-            {% csrf_token %}
-            {{feedbackForm.FeedbackBox}}<br/><br/>
-            <label>How would rate this app?</label>
-            {{feedbackForm.RatingBox}}<br/><br/>
-            <input type="submit" name="submit" value="Submit"/>
-        </form>
-    {% else %}
-        <p>You have not purchased this product. Click "purchase" button below to buy it</p>
-        <form action="/store/product/{{appData.0}}/purchase/" method="post" onsubmit="return confirm('Confirm to make your payment?');">
-            {% csrf_token %}
-            <input type="submit" name="purchase" value="Purchase"/>
-        </form>
-        {% if rented %}
-            <p>Currently you have rented this item and it is due on {{dueDate}}</p>
-        {%else%}
-            <p>Alternately, you may wish to rent this product.</p>
-            <form action="/store/product/{{appData.0}}/rent/" method="post" onsubmit="return confirm('Confirm to make your payment?');">
-                {% csrf_token %}
-                <label>Please select a returning date:<br/></label>
-                {{rentForm.DateBox}}
-                <input type="submit" name="Rent" value="Rent"/>
-            </form>
-        {% endif %}
-    {% endif %}
+        <script src="{% static 'store/js/vendor/modernizr-2.6.1-respond-1.1.0.min.js' %}"></script>
+    </head>
+    <body>
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+        <![endif]-->
 
-<h3>Other users experience and rating with this app</h3>
-{% if othersRating %}
-    <dl>
-        {% for row in othersRating %}
-        <dt>User: {{row.0}}</dt>
-        <dt>Rating: {{row.1}}</dt>
-        <dd>{{row.2}}</dd>
-        <dd><br/></dd>
-        {% endfor %}
-    </dl>
-{% else %}
-    <p>Other users have not rated this app yet</p>
-{% endif %}
+            <header>
+                <div id="top-header">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="home-account">
+                                    <a href="/store/">Home</a>
+                                    {% if user.is_authenticated %}
+                                        <a href="/store/user/{{user.username}}/">My orders</a>
+                                        <a href="/store/user/{{user.username}}/changePassword/">Change password</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="cart-info">
+                                    {% if user.is_authenticated %}
+                                    Welcome, {{user.username}}.
+                                    <a href="/store/logout/">Logout</a>
+                                    {% else %}
+                                    <a href="/store/register/">Sign Up</a> /
+                                    <a href="/store/login/">Log In</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="main-header">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="logo">
+                                    <a href="/store/"><img src="{% static 'store/images/logo.png' %}" title="Grill Template" alt="Grill Website Template" ></a>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="main-menu">
+                                    <ul>
+                                        
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="search-box">
+                                    <form name="search_form" class="search_form" action="/store/search/" method="post">
+                                        {% csrf_token %}
+                                        {{search_form.keyword}}
+                                        <input type="hidden" id="id_types" name="types" value='all' type="text">
+                                        <input type="submit" id="search-button"/>
+                                    </form>  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
 
-</body>
+            <div id="heading">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="heading-content">
+                                <h2>{{appData.1}}</h2>
+                                <span>Home / {{appData.4}} / <a href="/store/product/{{appData.0}}">{{appData.1}}</a></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+            <div id="product-post">
+                <div class="container">
+                    <div id="single-blog" class="page-section first-section">
+                        <div class="container">
+                            <div class="row">
+                                <div class="product-item col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <div class="product-content">
+                                                <div class="product-title">
+                                                    <h3>{{appData.1}}</h3>
+                                                    <span class="subtitle">{{ othersRating|length }} comments</span>
+                                                </div>
+                                                <p>{{appData.7}}</p>
+                                            </div>
+                                            <div class="comments-title">
+                                                <div class="comment-section">
+
+                                                    <h4>{{ othersRating|length }} comments</h4>
+                                                </div>
+                                            </div>
+                                            <div class="all-comments">
+                                                {% if othersRating %}
+                                                    {% for row in othersRating %}
+                                                        <div class="view-comments">
+                                                            <div class="comments">
+                                                                <div class="comment-body">
+                                                                    <h6>{{row.0}}</h6>
+                                                                    <span class="date">{{row.1}}</span>
+                                                                    {% if row.2 %}<p>{{row.2}}</p>{% endif %}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    {% endfor %}
+                                                {% else %}
+                                                {% endif %}
+                                            </div>
+                                            {% if purchased %}
+                                                <div class="leave-comment">
+                                                    <div class="leave-one">
+                                                        <h4>Leave a comment</h4>
+                                                    </div>
+                                                </div>
+                                                <div class="leave-form">
+                                                    <form action="/store/product/{{appData.0}}/feedback/" method="post" class="leave-comment">
+                                                        <div class="row">
+                                                        <div class="name col-md-4">
+                                                            <input type="text" name="name" id="name" placeholder="Name" />
+                                                        </div>
+                                                        <div class="email col-md-4">
+                                                            {{feedbackForm.RatingBox}}
+                                                        </div>
+                                                        <div class="subject col-md-4">
+                                                            <input type="text" name="subject" id="subject" placeholder="Subject" />
+                                                        </div>
+                                                        </div>
+                                                        <div class="row">        
+                                                            <div class="text col-md-12">
+                                                                {{feedbackForm.FeedbackBox}}
+                                                            </div>   
+                                                        </div>                              
+                                                        <div class="send">
+                                                            <button type="submit">Send</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-md-3 col-md-offset-1">
+                                            <div class="side-bar">
+                                                <div class="news-letters">
+                                                    <h4>Option</h4>
+                                                    <div class="archives-list">
+                                                        {% if purchased %}
+                                                            <p>You have purchased this item.</p>
+                                                        {% else %}
+                                                            <form action="/store/product/{{appData.0}}/purchase/" method="post" onsubmit="return confirm('Confirm to make your payment?');">
+                                                                {% csrf_token %}
+                                                                
+                                                                    <button type="submit" name="purchase" value="Purchase" >Purchase</button>
+                                                                
+                                                            </form>
+                                                            {% if appData.3 and rent %}
+                                                                <p>Currently you have rented this item and it is due on {{expire_date}}.</p>
+                                                            {%else%}
+                                                                <form action="/store/product/{{appData.0}}/rent/" method="post" onsubmit="return confirm('Confirm to make your payment?');">
+                                                                    {% csrf_token %}
+                                                                    <button type="submit" name="rent" value="Rent">Rent</button>
+                                                                </form>
+                                                            {% endif %}
+                                                        {% endif %}
+                                                    </div>        
+                                                </div>
+                                                <div class="recent-post">
+                                                    <h4>Product Information</h4>
+                                                    <div class="posts">
+                                                        <div class="recent-post">
+                                                            <div class="recent-post-info">
+                                                                <h6>Retail Price: <span>${{appData.2}}</span></h6>
+                                                                {% if appData.3 %}
+                                                                <h6>7-Day Rental Price: <span>${{appData.3}}</span></h6>
+                                                                {% endif %}
+                                                                <h6>Device: <span>{{appData.5}}</span></h6>
+                                                                <h6>Release Date: <span>{{appData.6}}</span></h6>
+                                                            </div>
+                                                        </div>
+                                                    </div> 
+                                                </div>   
+                                            </div>
+                                        </div>     
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>     
+                </div>
+            </div>
+
+
+            <footer>
+                <div class="container">
+                    <div class="top-footer">
+                        <div class="row">
+                            <div class="col-md-9">
+                                <div class="subscribe-form">
+                                    <span>Get in touch with us</span>
+                                    <form method="get" class="subscribeForm">
+                                        <input id="subscribe" type="text" />
+                                        <input type="submit" id="submitButton" />
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="social-bottom">
+                                    <span>Follow us:</span>
+                                    <ul>
+                                        <li><a href="#" class="fa fa-facebook"></a></li>
+                                        <li><a href="#" class="fa fa-twitter"></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="main-footer">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="about">
+                                    <h4 class="footer-title">About Grill</h4>
+                                    <p>Grill is free HTML5 template by <span class="blue">template</span><span class="green">mo</span> and it is a free responsive bootstrap layout that can be applied for any purpose.
+                                    <br><br>Credit goes to <a rel="nofollow" href="http://unsplash.com">Unsplash</a> for photos used in this template. Nam commodo erat quis ligula placerat viverra.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="shop-list">
+                                    <h4 class="footer-title">Shop Categories</h4>
+                                    <ul>
+                                        <li><a href="#"><i class="fa fa-angle-right"></i>New Grill Menu</a></li>
+                                        <li><a href="#"><i class="fa fa-angle-right"></i>Healthy Fresh Juices</a></li>
+                                        <li><a href="#"><i class="fa fa-angle-right"></i>Spicy Delicious Meals</a></li>
+                                        <li><a href="#"><i class="fa fa-angle-right"></i>Simple Italian Pizzas</a></li>
+                                        <li><a href="#"><i class="fa fa-angle-right"></i>Pure Good Yogurts</a></li>
+                                        <li><a href="#"><i class="fa fa-angle-right"></i>Ice-cream for kids</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="recent-posts">
+                                    <h4 class="footer-title">Recent posts</h4>
+                                    <div class="recent-post">
+                                        <div class="recent-post-thumb">
+                                            <img src="{% static 'store/images/recent-post1.jpg' %}" alt="">
+                                        </div>
+                                        <div class="recent-post-info">
+                                            <h6><a href="#">Delicious and Healthy Menus</a></h6>
+                                            <span>24/12/2084</span>
+                                        </div>
+                                    </div>
+                                    <div class="recent-post">
+                                        <div class="recent-post-thumb">
+                                            <img src="{% static 'store/images/recent-post2.jpg' %}" alt="">
+                                        </div>
+                                        <div class="recent-post-info">
+                                            <h6><a href="#">Simple and effective meals</a></h6>
+                                            <span>18/12/2084</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="more-info">
+                                    <h4 class="footer-title">More info</h4>
+                                    <p>Sed dignissim, diam id molestie faucibus, purus nisl pretium quam, in pulvinar velit massa id elit.</p>
+                                    <ul>
+                                        <li><i class="fa fa-phone"></i>010-020-0340</li>
+                                        <li><i class="fa fa-globe"></i>123 Dagon Studio, Yakin Street, Digital Estate</li>
+                                        <li><i class="fa fa-envelope"></i><a href="#">info@company.com</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bottom-footer">
+                        <p>Copyright © 2084 <a href="#">Your Company Name</a></p>
+                    </div>
+                    
+                </div>
+            </footer>
+
+    
+        <script src="{% static 'store/js/vendor/jquery-1.11.0.min.js' %}"></script>
+        <script src="{% static 'store/js/vendor/jquery.gmap3.min.js' %}"></script>
+        <script src="{% static 'store/js/plugins.js' %}"></script>
+        <script src="{% static 'store/js/main.js' %}"></script>
+
+    </body>
 </html>
