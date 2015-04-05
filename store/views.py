@@ -146,22 +146,21 @@ def ProductPage(request, product_id):
         cursor.execute("SELECT COUNT(*) FROM store_purchased WHERE userid_id = %d AND appid_id =%d" % (int(user.id), int(product_id)))
         num = cursor.fetchone()[0]
         if num > 0 :
-            purchased = True
+            is_purchased = True
         else :
-            purchased = False
+            is_purchased = False
         
         cursor.execute("SELECT COUNT(*) FROM store_rent WHERE userid_id = %d AND appid_id =%d" % (int(user.id), int(product_id)))
         num = cursor.fetchone()[0]
         if num > 0 :
-            rent = True
+            is_rent = True
             cursor.execute("SELECT expire_date FROM store_rent WHERE userid_id = %d AND appid_id =%d" % (int(user.id), int(product_id)))
             expire_date = cursor.fetchone()[0]
         else :
-            rent = False
-
+            is_rent = False
     else :
-        purchased = False
-        rent = False
+        is_purchased = False
+        is_rent = False
     
     random_picture = str(random.randint(51,70))
     cursor.execute("SELECT COUNT(*), SUM(r.rating) FROM store_app a, store_rent r WHERE r.rating > 0 AND r.appid_id = a.appid AND a.appid = %d; " % int(product_id))
@@ -183,7 +182,7 @@ def ProductPage(request, product_id):
     app_data = (app.appid, app.name,app.purchase_price, app.rent_price,app.genre,app.device,app.release_date,app.description, app.icon, stars, random_picture)
     search_form = SearchForm()
 
-    return render(request,'store/product.html',{'username':username,'app_data':app_data,'purchased':purchased,'rent':rent,'expire_date':expire_date,
+    return render(request,'store/product.html',{'username':username,'app_data':app_data,'purchased':is_purchased,'rent':is_rent,'expire_date':expire_date,
                                                 'feedbackForm':feedbackForm,'othersRating':othersRating, 'search_form': search_form})
 
 def ProductPurchase(request, product_id):
