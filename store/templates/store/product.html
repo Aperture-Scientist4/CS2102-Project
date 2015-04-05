@@ -64,7 +64,7 @@ http://www.templatemo.com/preview/templatemo_417_grill
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="logo">
-                                    <a href="/store/"><img src="{% static 'store/images/logo.png' %}" title="Grill Template" alt="Grill Website Template" ></a>
+                                    <a href="/store/"><img src="{% static 'store/images/logo.png' %}" /></a>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -182,7 +182,7 @@ http://www.templatemo.com/preview/templatemo_417_grill
                                                         {% if purchased %}
                                                             <p>You have purchased this item.</p>
                                                         {% else %}
-                                                            <form action="/store/product/{{app_data.0}}/purchase/" method="post" onsubmit="return confirm('Confirm to make your payment?');">
+                                                            <form action="/store/product/{{app_data.0}}/purchase/" method="get">
                                                                 {% csrf_token %}
                                                                 <button type="submit" name="purchase" value="Purchase" class="btn btn-primary btn-block">Purchase for ${{app_data.2}}</button>
                                                             </form>
@@ -190,9 +190,8 @@ http://www.templatemo.com/preview/templatemo_417_grill
                                                                 {% if rent %}
                                                                     <p>Currently you have rented this item and it is due on {{expire_date}}.</p>
                                                                 {%else%}
-                                                                    
                                                                     </br>
-                                                                    <form action="/store/product/{{app_data.0}}/rent/" method="post" onsubmit="return confirm('Confirm to make your payment?');">
+                                                                    <form action="/store/product/{{app_data.0}}/rent/" method="get">
                                                                         {% csrf_token %}
                                                                         <button type="submit" name="rent" value="Rent" class="btn btn-success btn-block">7-Day Rental for ${{app_data.3}}</button>
                                                                     </form>

@@ -4,9 +4,9 @@ from django import forms
 
 class App(models.Model):
 	GENRE_CHOICES = (
-		('game','game'),
-		('movie','movie'),
-		('app',"app"),
+		('Game','Game'),
+		('Movie','Movie'),
+		('App',"App"),
 		('TVshow',"TVshow")
 	)
 	appid = models.PositiveIntegerField(primary_key=True)

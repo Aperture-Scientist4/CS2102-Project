@@ -1,0 +1,35 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Order - uTunes</title>
+
+        <link rel="stylesheet" type="text/css" href="{% static 'store/style_register.css' %}" />
+    </head>
+
+    <body>
+    <div class="register-card">
+        <h1><img src="{% static 'store/images/logo.png' %}" /></h1>
+
+        {% if success %}
+        <h1>Thank you!</h1>
+        <p>Billed to: <strong>{{user.username}}</strong>, {{user.email}}<p>
+        <p>{{app.name}} - purchase [{{app.genre}}]</p>
+        <p style="text-align: right">Order total (w/ GST): ${{app.purchase_price}}</p>
+        <p><a href="../">Return to product page</a>.</p>
+        {% else %}
+        <h1>Order detail</h1>
+        <p>Billed to: <strong>{{user.username}}</strong>, {{user.email}}<p>
+        <p>{{app.name}} - purchase [{{app.genre}}]</p>
+        <p style="text-align: right">Order total (w/ GST): ${{app.purchase_price}}</p>
+
+        <form id="user_form" method="post" action="{{ request.get_full_path }}"
+                enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="submit" name="submit" class="login login-submit" value="Purchase" />
+        </form>
+        {% endif %}
+    </div>
+    </body>
+</html>

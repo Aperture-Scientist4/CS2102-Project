@@ -156,30 +156,34 @@ def ProductPage(request, product_id):
                                                 'feedback_form':feedback_form,'rating_entries':rating_entries, 'search_form': search_form, 'reviewed': is_reviewed})
 @login_required(login_url='/store/login/')
 def ProductPurchase(request, product_id):
-    if request.user.is_authenticated():
-        if request.method == 'POST':
-            userid = request.user.id
-            if not is_valid_rent(product_id, userid):
-                orderid = ''.join(random.SystemRandom().choice(string.ascii_lowercase + string.digits) for _ in range(10))
-                cursor = connection.cursor()
-                cursor.execute("INSERT INTO store_purchased(userid_id, order_id, appid_id) VALUES (%d, '%s', %d);" % (int(userid), orderid, int(product_id)))        
-        return HttpResponseRedirect('/store/product/'+product_id)
-    else :
-        return render(request, 'store/login.html', {})
+    success = False
+    app = App.objects.get(appid = product_id)
+    if request.method == 'POST':
+        userid = request.user.id
+        if not is_valid_purchase(product_id, userid):
+            orderid = ''.join(random.SystemRandom().choice(string.ascii_lowercase + string.digits) for _ in range(10))
+            cursor = connection.cursor()
+            cursor.execute("INSERT INTO store_purchased(userid_id, order_id, appid_id) VALUES (%d, '%s', %d);" % (int(userid), orderid, int(product_id))) 
+        success = True      
+    return render(request,
+            'store/purchase.html',
+            {'app': app, 'user': request.user, "success": success})
 
 @login_required(login_url='/store/login/')
 def ProductRent(request, product_id):
-    if request.user.is_authenticated():
-        if request.method == 'POST':
-            userid = request.user.id
-            if not is_valid_rent(product_id, userid):
-                orderid = ''.join(random.SystemRandom().choice(string.ascii_lowercase + string.digits) for _ in range(10));
-                expire_date = (datetime.date.today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d')
-                cursor = connection.cursor()
-                cursor.execute("INSERT INTO store_rent(userid_id, order_id, appid_id, expire_date) VALUES (%d, '%s', %d, '%s');" % (int(userid), orderid, int(product_id), expire_date))        
-        return HttpResponseRedirect('/store/product/'+product_id)
-    else:
-        return render(request, 'store/login.html', {})
+    success = False
+    app = App.objects.get(appid = product_id)
+    if request.method == 'POST':
+        userid = request.user.id
+        if not is_valid_rent(product_id, userid):
+            orderid = ''.join(random.SystemRandom().choice(string.ascii_lowercase + string.digits) for _ in range(10))
+            expire_date = (datetime.date.today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d')
+            cursor = connection.cursor()
+            cursor.execute("INSERT INTO store_rent(userid_id, order_id, appid_id, expire_date) VALUES (%d, '%s', %d, '%s');" % (int(userid), orderid, int(product_id), expire_date))        
+        success = True      
+    return render(request,
+            'store/rent.html',
+            {'app': app, 'user': request.user, "success": success})
 
 @login_required
 def ProductFeedback(request, product_id):
