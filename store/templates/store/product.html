@@ -142,7 +142,7 @@ http://www.templatemo.com/preview/templatemo_417_grill
                                                 {% else %}
                                                 {% endif %}
                                             </div>
-                                            {% if purchased %}
+                                            {% if purchased or rent %}
                                                 <div class="leave-comment">
                                                     <div class="leave-one">
                                                         <h4>Leave a comment</h4>
@@ -151,18 +151,14 @@ http://www.templatemo.com/preview/templatemo_417_grill
                                                 <div class="leave-form">
                                                     <form action="/store/product/{{app_data.0}}/feedback/" method="post" class="leave-comment">
                                                         <div class="row">
-                                                        <div class="name col-md-4">
-                                                            <input type="text" name="name" id="name" placeholder="Name" />
-                                                        </div>
                                                         <div class="email col-md-4">
-                                                            {{feedbackForm.RatingBox}}
+                                                            <label>My rating: </label>{{feedbackForm.RatingBox}}
                                                         </div>
-                                                        <div class="subject col-md-4">
-                                                            <input type="text" name="subject" id="subject" placeholder="Subject" />
-                                                        </div>
+                                                        
                                                         </div>
                                                         <div class="row">        
                                                             <div class="text col-md-12">
+                                                                <label>Review: </label>
                                                                 {{feedbackForm.FeedbackBox}}
                                                             </div>   
                                                         </div>                              

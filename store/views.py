@@ -182,7 +182,7 @@ def ProductPage(request, product_id):
     app_data = (app.appid, app.name,app.purchase_price, app.rent_price,app.genre,app.device,app.release_date,app.description, app.icon, stars, random_picture)
     search_form = SearchForm()
 
-    return render(request,'store/product.html',{'username':username,'app_data':app_data,'purchased':is_purchased,'rent':is_rent,'expire_date':expire_date,
+    return render(request,'store/product.html',{'app_data':app_data,'purchased':is_purchased,'rent':is_rent,'expire_date':expire_date,
                                                 'feedbackForm':feedbackForm,'othersRating':othersRating, 'search_form': search_form})
 
 def ProductPurchase(request, product_id):
