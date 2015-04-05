@@ -12,17 +12,16 @@
         <div class="login-card">
         <h1>uTunes Login</h1>
 
-        <form id="login_form" method="post" action="/store/login/">
+        <form id="login_form" method="post" action="{{ request.get_full_path }}">
             {% csrf_token %}
             Username: <input type="text" name="username" value="" placeholder="Username" size="50" />
             <br />
             Password: <input type="password" name="password" value="" placeholder="Password" size="50" />
             <br />
-
             <input type="submit" class="login login-submit" value="submit" />
         </form>
         <div class="login-help">
-        <a href="/store/register/">Register Here</a>
+        <a href="/store/register/?next={{ request.get_full_path }}">Register Here</a>
         </div>
         
         </div>

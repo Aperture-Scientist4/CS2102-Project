@@ -14,10 +14,10 @@
 
         {% if registered %}
         <strong>Thank you for registering!</strong>
-        <a href="/store/">Return to the homepage.</a><br />
+        <a href="{{redirect_to}}">Return to last page.</a><br />
         {% else %}
 
-        <form id="user_form" method="post" action="/store/register/"
+        <form id="user_form" method="post" action="{{ request.get_full_path }}"
                 enctype="multipart/form-data">
 
             {% csrf_token %}

@@ -40,19 +40,18 @@ http://www.templatemo.com/preview/templatemo_417_grill
                                 <div class="home-account">
                                     <a href="/store/">Home</a>
                                     {% if user.is_authenticated %}
-                                        <a href="/store/user/{{user.username}}/">My orders</a>
-                                        <a href="/store/user/{{user.username}}/changePassword/">Change password</a>
+                                        <a href="/store/myaccount/">My orders</a>
+                                        <a href="/store/password/">Change password</a>
                                     {% endif %}
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="cart-info">
                                     {% if user.is_authenticated %}
-                                    Welcome, {{user.username}}.
-                                    <a href="/store/logout/">Logout</a>
+                                    <a href="/store/logout/?next={{request.path}}">Logout</a>
                                     {% else %}
-                                    <a href="/store/register/">Sign Up</a> /
-                                    <a href="/store/login/">Log In</a>
+                                    <a href="/store/register/?next={{request.path}}">Sign Up</a> /
+                                    <a href="/store/login/?next={{request.path}}">Log In</a>
                                     {% endif %}
                                 </div>
                             </div>

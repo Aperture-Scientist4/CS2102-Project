@@ -20,33 +20,36 @@ def indexView(request):
 
 def register(request):
     registered = False
+    redirect_to = False
     if request.method == 'POST':
         user_form = UserForm(data=request.POST)
         if user_form.is_valid():
+            redirect_to = request.GET.get('next')
             user = user_form.save()
             user.set_password(user.password)
             user.save()
             registered = True
+
         else:
             print ("Error!")
     else:
         user_form = UserForm()
     return render(request,
             'store/register.html',
-            {'user_form': user_form, 'registered': registered} )
+            {'user_form': user_form, 'redirect_to': redirect_to, 'registered': registered} )
 
 
 def user_login(request):
-
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-
+        redirect_to = request.GET.get('next')
         user = authenticate(username=username, password=password)
 
         if user:
             login(request, user)
-            return HttpResponseRedirect('/store/')
+            print(redirect_to)
+            return HttpResponseRedirect(redirect_to)
         else:
             return HttpResponse("Invalid login!")
 
@@ -56,10 +59,8 @@ def user_login(request):
 
 
 @login_required(login_url='/store/login/')
-def my_account(request, user_name):
-    if request.user.username != user_name :
-        return HttpResponse("You are not allowed to access this page!")
-    user = User.objects.get(username = user_name)
+def my_account(request):
+    user = request.user
     context_dict = {}
     context_dict['username'] = user.username
     cursor = connection.cursor()
@@ -83,13 +84,12 @@ def my_account(request, user_name):
 @login_required
 def user_logout(request):
     logout(request)
+    redirect_to = request.GET.get('next')
+    return HttpResponseRedirect(redirect_to)
 
-    # Take the user back to the homepage.
-    return HttpResponseRedirect('/store/')
-
-@login_required
-def password_change(request,user_name):
-    user = User.objects.get(username = user_name)
+@login_required(login_url='/store/login/')
+def password_change(request):
+    user = request.user
     context_dict = {}
     context_dict['username'] = user.username
     if request.method == 'POST':
@@ -241,29 +241,6 @@ def create_search(request):
         search_form = SearchForm()
         return render(request,'store/search.html',{'search_form':search_form})
 #<--SearchPage View
-
-@login_required
-def rate_review(request, user_name, orderid) :
-    user = User.objects.get(username = user_name)
-
-    if len(Purchased.objects.filter(order_id = orderid)[:])!= 0:
-        order = Purchased.objects.get(order_id = orderid)
-    else:
-        order = Rent.objects.get(order_id = orderid)
-    context_dict={}
-    context_dict['order'] = order
-    context_dict['username'] = user.username
-    
-    if request.method == 'POST':
-        rating = request.POST.get('rating')
-        review = request.POST.get('review')
-        order.rating = rating
-        order.review = review
-        order.save()
-        return HttpResponseRedirect('/store/')
-
-    else:
-        return render(request, 'store/review.html', context_dict)
 
 def is_valid_rent(appid, userid):
     cursor = connection.cursor()
