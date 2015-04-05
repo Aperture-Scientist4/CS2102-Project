@@ -40,6 +40,7 @@ http://www.templatemo.com/preview/templatemo_417_grill
                                 <div class="home-account">
                                     <a href="/store/">Home</a>
                                     {% if user.is_authenticated %}
+                                    <a href="/store/user/{{user.username}}/">My account</a>
                                     <a href="/store/user/{{user.username}}/changePassword/">ChangePassword</a>
                                     {% endif %}
                                 </div>
@@ -47,7 +48,7 @@ http://www.templatemo.com/preview/templatemo_417_grill
                             <div class="col-md-6">
                                 <div class="cart-info">
                                     {% if user.is_authenticated %}
-                                    Welcome, {{user.username}}!
+                                    Welcome, {{user.username}}.
                                     <a href="/store/logout/">Logout</a>
                                     {% else %}
                                     <a href="/store/register/">Sign Up</a> /
@@ -88,48 +89,68 @@ http://www.templatemo.com/preview/templatemo_417_grill
                 </div>
             </header>
 
-<!--
             <div id="heading">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="heading-content">
-                                <h2>Search</h2>
-                                <span>Home / <a href="/store/search/">Search</a></span>
+                                <h2>My account</h2>
+                                <span>Home / <a href="/store/search/">My account</a></span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
--->
-
-
-
-
             <div id="products-post">
                 <div class="container">
                     <div class="row">
                         <div class="col-md-12">
                             <div id="product-heading">
-                                <h2>App Purchased </h2>
+                                <h2>App Ordered</h2>
                                 <img src="{% static 'store/images/under-heading.png' %}" alt="" >
                             </div>
                         </div>
                     </div>
-                    <div class="row" id="Container">
+                    <div class="row">
+                        <div class="filters col-md-12 col-xs-12">
+                            <ul id="filters" class="clearfix" style="padding-left: 0;">
+                                <li><span class="filter" data-filter="all">All</span></li>
+                                <li><span class="filter" data-filter=".purchased">Purchased</span></li>
+                                <li><span class="filter" data-filter=".rent">Rent</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row" id="Container" style="margin-top: 0px;">
                         {% if app_list_purchased %}
-                            {% for app in app_list_purchased %}
-                            <div class="col-md-3 col-sm-6 mix portfolio-item {{app.genre}}">
-                                <div class="portfolio-wrapper">                
-                                    <div class="portfolio-thumb">
-                                        <a href="/store/product/{{app.id}}/"><img src="{% if app.icon %}{{app.icon}}{% else %}{% static 'store/images/logo.png' %}{% endif %}" alt="" /></a>
-                                    </div>  
-                                    <div class="label-text">
-                                        <h3><a href="/store/product/{{ app.appid }}/">{{ app.name }}</a></h3>
-                                        <p>{{app.genre}}<span class="text-category"></span>
-                                    </div>
-                                </div>          
-                            </div>
+                            {% for row in app_list_purchased %}
+                                <div class="col-md-3 col-sm-6 mix portfolio-item purchased">
+                                    <div class="portfolio-wrapper">                
+                                        <div class="portfolio-thumb">
+                                            <a href="/store/product/{{row.0}}/"><img src="{% if row.3 %}{{row.3}}{% else %}{% with 'store/images/'|add:row.5|add:'.png' as image_static %}{% static image_static %}{% endwith %}{% endif %}" alt="" /></a>
+                                        </div>  
+                                        <div class="label-text">
+                                            <h3><a href="/store/product/{{ row.0 }}/">{{ row.1 }}</a></h3>
+                                            <p>{{ row.2 }}{% if row.4 %}{% else %}<span class="text-category"><a href="/store/product/{{ row.0 }}/">Rating Pending</a></span>{% endif %}</p>
+                                        </div>
+                                    </div>          
+                                </div>                            {% endfor %}
+                        {% else %}
+                            
+                        {% endif %}
+
+                        {% if app_list_rent %}
+                            {% for row in app_list_rent %}
+                                <div class="col-md-3 col-sm-6 mix portfolio-item rent">
+                                    <div class="portfolio-wrapper">                
+                                        <div class="portfolio-thumb">
+                                            <a href="/store/product/{{row.0}}/"><img src="{% if row.3 %}{{row.3}}{% else %}{% with 'store/images/'|add:row.6|add:'.png' as image_static %}{% static image_static %}{% endwith %}{% endif %}" alt="" /></a>
+                                        </div>  
+                                        <div class="label-text">
+                                            <h3><a href="/store/product/{{ row.0 }}/">{{ row.1 }}</a></h3>
+                                            <p>{{ row.2 }}</br>expire on {{row.5}}{% if row.4 %}{% else %}<span class="text-category"><a href="/store/product/{{ row.0 }}/">Rating Pending</a></span>{% endif %}</p>
+                                        </div>
+                                    </div>          
+                                </div>
                             {% endfor %}
                         {% else %}
                             
@@ -137,41 +158,6 @@ http://www.templatemo.com/preview/templatemo_417_grill
                     </div> 
                 </div>
             </div>
-
-            <div id="products-post">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div id="product-heading">
-                                <h2>App Rented </h2>
-                                <img src="{% static 'store/images/under-heading.png' %}" alt="" >
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row" id="Container">
-                        {% if app_list_rent %}
-                            {% for app in app_list_rent %}
-                            <div class="col-md-3 col-sm-6 mix portfolio-item {{app.genre}}">
-                                <div class="portfolio-wrapper">                
-                                    <div class="portfolio-thumb">
-                                        <a href="/store/product/{{app.id}}/"><img src="{% if app.icon %}{{app.icon}}{% else %}{% static 'store/images/logo.png' %}{% endif %}" alt="" /></a>
-                                    </div>  
-                                    <div class="label-text">
-                                        <h3><a href="/store/product/{{ app.appid }}/">{{ app.name }}</a></h3>
-                                        <p>{{app.genre}}<span class="text-category"></span>
-                                    </div>
-                                </div>          
-                            </div>
-                            {% endfor %}
-                        {% else %}
-                            <p>something</p>
-                        {% endif %}
-                    </div> 
-
-                </div>
-            </div>
-
-
 
 			<footer>
                 <div class="container">

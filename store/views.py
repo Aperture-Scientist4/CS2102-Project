@@ -63,16 +63,29 @@ def restricted(request, user_name):
     user = User.objects.get(username = user_name)
     context_dict = {}
     context_dict['username'] = user.username
+    cursor = connection.cursor()
+    cursor.execute("SELECT a.appid, a.name, a.genre, a.icon, p.rating FROM store_app a, store_purchased p WHERE p.appid_id = a.appid AND p.userid_id = %d;" % int(user.id))
+    app_list_purchased = cursor.fetchall()
+    for i in range(len(app_list_purchased)):
+        random_picture = str(random.randint(51,70))
+        app_list_purchased[i] += (random_picture, )
+    cursor = connection.cursor()
+    cursor.execute("SELECT a.appid, a.name, a.genre, a.icon, r.rating, r.expire_date FROM store_app a, store_rent r WHERE r.appid_id = a.appid AND r.userid_id = %d;" % int(user.id))
+    app_list_rent = cursor.fetchall()
+    for i in range(len(app_list_rent)):
+        random_picture = str(random.randint(51,70))
+        app_list_rent[i] += (random_picture, )
+    '''
     list_purchased = Purchased.objects.filter(userid_id = user.id)[:]
     app_list_purchased = []
-    app_list_rent = []
     for purchase in list_purchased :
         app_list_purchased.append(App.objects.get(appid = purchase.appid_id))
+
     list_rent = Rent.objects.filter(userid_id = user.id)[:]
+    app_list_rent = []
     for rent in list_rent :
         app_list_rent.append(App.objects.get(appid = rent.appid_id))
-
-    '''
+    
     app_list = Purchased.objects.raw('SELECT * FROM store_purchased WHERE user= %s' , [user.username])
 
     app_list.append(Rent.objects.raw('SELECT * FROM store_rent WHERE user= %s' , [user.username]))
@@ -80,7 +93,7 @@ def restricted(request, user_name):
     context_dict['app_list_purchased'] = app_list_purchased
     context_dict['app_list_rent'] = app_list_rent
 
-    return render(request, 'store/restricted_new.html', context_dict)
+    return render(request, 'store/my_account.html', context_dict)
 
 @login_required
 def user_logout(request):
