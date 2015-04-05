@@ -40,8 +40,8 @@ http://www.templatemo.com/preview/templatemo_417_grill
                                 <div class="home-account">
                                     <a href="/store/">Home</a>
                                     {% if user.is_authenticated %}
-                                    <a href="/store/user/{{user.username}}/">My account</a>
-                                    <a href="/store/user/{{user.username}}/changePassword/">ChangePassword</a>
+                                        <a href="/store/user/{{user.username}}/">My orders</a>
+                                        <a href="/store/user/{{user.username}}/changePassword/">Change password</a>
                                     {% endif %}
                                 </div>
                             </div>
@@ -70,7 +70,7 @@ http://www.templatemo.com/preview/templatemo_417_grill
                             <div class="col-md-6">
                                 <div class="main-menu">
                                     <ul>
-                                        <li><a href="/store/">Home</a></li>
+                                        
                                     </ul>
                                 </div>
                             </div>
@@ -94,8 +94,8 @@ http://www.templatemo.com/preview/templatemo_417_grill
                     <div class="row">
                         <div class="col-md-12">
                             <div class="heading-content">
-                                <h2>My account</h2>
-                                <span>Home / <a href="/store/search/">My account</a></span>
+                                <h2>My orders</h2>
+                                <span>Home / <a href="/store/user/{{user.username}}">My orders</a></span>
                             </div>
                         </div>
                     </div>
@@ -133,7 +133,8 @@ http://www.templatemo.com/preview/templatemo_417_grill
                                             <p>{{ row.2 }}{% if row.4 %}{% else %}<span class="text-category"><a href="/store/product/{{ row.0 }}/">Rating Pending</a></span>{% endif %}</p>
                                         </div>
                                     </div>          
-                                </div>                            {% endfor %}
+                                </div>
+                            {% endfor %}
                         {% else %}
                             
                         {% endif %}

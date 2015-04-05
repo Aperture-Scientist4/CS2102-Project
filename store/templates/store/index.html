@@ -40,7 +40,8 @@ http://www.templatemo.com/preview/templatemo_417_grill
                                 <div class="home-account">
                                     <a href="/store/">Home</a>
                                     {% if user.is_authenticated %}
-                                    <a href="/store/user/{{user.username}}/">My account</a>
+                                        <a href="/store/user/{{user.username}}/">My orders</a>
+                                        <a href="/store/user/{{user.username}}/changePassword/">Change password</a>
                                     {% endif %}
                                 </div>
                             </div>
@@ -69,7 +70,7 @@ http://www.templatemo.com/preview/templatemo_417_grill
                             <div class="col-md-6">
                                 <div class="main-menu">
                                     <ul>
-                                        <li><a href="/store/">Home</a></li>
+                                        
                                     </ul>
                                 </div>
                             </div>
