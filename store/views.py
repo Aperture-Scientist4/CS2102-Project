@@ -190,7 +190,7 @@ def ProductFeedback(request, product_id):
             if is_valid_purchase(product_id, userid):
                 cursor.execute("UPDATE store_purchased SET rating = %d, review = '%s' WHERE userid_id = %d AND appid_id = %d;" % (int(rating), review, int(userid), int(product_id)))        
             else:
-                cursor.execute("UPDATE store_rent SET rating = %d, review = '%s' WHERE userid_id = %d AND appid_id = %d LIMIT 1;" % (int(rating), review, int(userid), int(product_id)))        
+                cursor.execute("UPDATE store_rent SET rating = %d, review = '%s' WHERE order_id = (SELECT order_id FROM store_rent WHERE userid_id = %d AND appid_id = %d LIMIT 1);" % (int(rating), review, int(userid), int(product_id)))        
     return HttpResponseRedirect('/store/product/'+product_id)
 
 def ErrorPage(request):
