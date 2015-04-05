@@ -94,8 +94,8 @@ http://www.templatemo.com/preview/templatemo_417_grill
                     <div class="row">
                         <div class="col-md-12">
                             <div class="heading-content">
-                                <h2>{{appData.1}}</h2>
-                                <span>Home / {{appData.4}} / <a href="/store/product/{{appData.0}}">{{appData.1}}</a></span>
+                                <h2>{{app_data.1}}</h2>
+                                <span>Home / {{app_data.4}} / <a href="/store/product/{{app_data.0}}">{{app_data.1}}</a></span>
                             </div>
                         </div>
                     </div>
@@ -116,14 +116,13 @@ http://www.templatemo.com/preview/templatemo_417_grill
                                         <div class="col-md-8">
                                             <div class="product-content">
                                                 <div class="product-title">
-                                                    <h3>{{appData.1}}</h3>
-                                                    <span class="subtitle">{{ othersRating|length }} comments</span>
+                                                    <h3>{{app_data.1}}</h3>
+                                                    <span class="subtitle">{% for i in app_data.9 %}&#9733;{% endfor %}</span>
                                                 </div>
-                                                <p>{{appData.7}}</p>
+                                                <p>{{app_data.7}}</p>
                                             </div>
                                             <div class="comments-title">
                                                 <div class="comment-section">
-
                                                     <h4>{{ othersRating|length }} comments</h4>
                                                 </div>
                                             </div>
@@ -150,7 +149,7 @@ http://www.templatemo.com/preview/templatemo_417_grill
                                                     </div>
                                                 </div>
                                                 <div class="leave-form">
-                                                    <form action="/store/product/{{appData.0}}/feedback/" method="post" class="leave-comment">
+                                                    <form action="/store/product/{{app_data.0}}/feedback/" method="post" class="leave-comment">
                                                         <div class="row">
                                                         <div class="name col-md-4">
                                                             <input type="text" name="name" id="name" placeholder="Name" />
@@ -182,19 +181,19 @@ http://www.templatemo.com/preview/templatemo_417_grill
                                                         {% if purchased %}
                                                             <p>You have purchased this item.</p>
                                                         {% else %}
-                                                            <form action="/store/product/{{appData.0}}/purchase/" method="post" onsubmit="return confirm('Confirm to make your payment?');">
+                                                            <form action="/store/product/{{app_data.0}}/purchase/" method="post" onsubmit="return confirm('Confirm to make your payment?');">
                                                                 {% csrf_token %}
-                                                                
-                                                                    <button type="submit" name="purchase" value="Purchase" >Purchase</button>
-                                                                
+                                                                <button type="submit" name="purchase" value="Purchase" >Purchase</button>
                                                             </form>
-                                                            {% if appData.3 and rent %}
-                                                                <p>Currently you have rented this item and it is due on {{expire_date}}.</p>
-                                                            {%else%}
-                                                                <form action="/store/product/{{appData.0}}/rent/" method="post" onsubmit="return confirm('Confirm to make your payment?');">
-                                                                    {% csrf_token %}
-                                                                    <button type="submit" name="rent" value="Rent">Rent</button>
-                                                                </form>
+                                                            {% if app_data.3 %}
+                                                                {% if rent %}
+                                                                    <p>Currently you have rented this item and it is due on {{expire_date}}.</p>
+                                                                {%else%}
+                                                                    <form action="/store/product/{{app_data.0}}/rent/" method="post" onsubmit="return confirm('Confirm to make your payment?');">
+                                                                        {% csrf_token %}
+                                                                        <button type="submit" name="rent" value="Rent">Rent</button>
+                                                                    </form>
+                                                                {% endif %}
                                                             {% endif %}
                                                         {% endif %}
                                                     </div>        
@@ -204,12 +203,13 @@ http://www.templatemo.com/preview/templatemo_417_grill
                                                     <div class="posts">
                                                         <div class="recent-post">
                                                             <div class="recent-post-info">
-                                                                <h6>Retail Price: <span>${{appData.2}}</span></h6>
-                                                                {% if appData.3 %}
-                                                                <h6>7-Day Rental Price: <span>${{appData.3}}</span></h6>
+                                                                <img src="{% if app_data.8 %}{{app_data.8}}{% else %}{% with 'store/images/'|add:app_data.10|add:'.png' as image_static %}{% static image_static %}{% endwith %}{% endif %}" alt="" />
+                                                                <h6>Retail Price: <span>${{app_data.2}}</span></h6>
+                                                                {% if app_data.3 %}
+                                                                <h6>7-Day Rental Price: <span>${{app_data.3}}</span></h6>
                                                                 {% endif %}
-                                                                <h6>Device: <span>{{appData.5}}</span></h6>
-                                                                <h6>Release Date: <span>{{appData.6}}</span></h6>
+                                                                <h6>Device: <span>{{app_data.5}}</span></h6>
+                                                                <h6>Release Date: <span>{{app_data.6}}</span></h6>
                                                             </div>
                                                         </div>
                                                     </div> 

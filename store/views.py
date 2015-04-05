@@ -163,13 +163,27 @@ def ProductPage(request, product_id):
         purchased = False
         rent = False
     
+    random_picture = str(random.randint(51,70))
+    cursor.execute("SELECT COUNT(*), SUM(r.rating) FROM store_app a, store_rent r WHERE r.rating > 0 AND r.appid_id = a.appid AND a.appid = %d; " % int(product_id))
+    rent = cursor.fetchone()
+    cursor.execute("SELECT COUNT(*), SUM(p.rating) FROM store_app a, store_purchased p WHERE p.rating > 0 AND p.appid_id = a.appid AND a.appid = %d;" % int(product_id))
+    purchase = cursor.fetchone()
+    if rent[0]+purchase[0] == 0:
+        rating = 0
+    elif rent[0] == 0:
+        rating = int(int(purchase[1])/float(purchase[0]))
+    elif purchase[0] == 0:
+        rating = int(int(rent[1])/float(rent[0]))
+    else:
+        rating = int((int(rent[1]) + purchase[1])/float(rent[0]+purchase[0]))
+    stars = rating*"x";
     feedbackForm = FeedbackForm()
     cursor.execute("SELECT a.username, s.rating, s.review FROM store_purchased s, auth_user a WHERE s.appid_id = %d AND s.userid_id = a.id AND s.rating > 0" % int(product_id))
     othersRating = cursor.fetchall()
-    appData = [app.appid, app.name,app.purchase_price, app.rent_price,app.genre,app.device,app.release_date,app.description]
+    app_data = (app.appid, app.name,app.purchase_price, app.rent_price,app.genre,app.device,app.release_date,app.description, app.icon, stars, random_picture)
     search_form = SearchForm()
 
-    return render(request,'store/product.html',{'username':username,'appData':appData,'purchased':purchased,'rent':rent,'expire_date':expire_date,
+    return render(request,'store/product.html',{'username':username,'app_data':app_data,'purchased':purchased,'rent':rent,'expire_date':expire_date,
                                                 'feedbackForm':feedbackForm,'othersRating':othersRating, 'search_form': search_form})
 
 def ProductPurchase(request, product_id):
