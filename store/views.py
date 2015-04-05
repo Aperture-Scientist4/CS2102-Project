@@ -64,32 +64,18 @@ def restricted(request, user_name):
     context_dict = {}
     context_dict['username'] = user.username
     cursor = connection.cursor()
-    cursor.execute("SELECT a.appid, a.name, a.genre, a.icon, p.rating FROM store_app a, store_purchased p WHERE p.appid_id = a.appid AND p.userid_id = %d;" % int(user.id))
+    cursor.execute("SELECT a.appid, a.name, a.genre, a.icon FROM store_app a, store_purchased p WHERE p.appid_id = a.appid AND p.userid_id = %d;" % int(user.id))
     app_list_purchased = cursor.fetchall()
     for i in range(len(app_list_purchased)):
+        is_reviewed = is_rated(app_list_purchased[i][0], user.id)
         random_picture = str(random.randint(51,70))
-        app_list_purchased[i] += (random_picture, )
-    cursor = connection.cursor()
-    cursor.execute("SELECT a.appid, a.name, a.genre, a.icon, r.rating, r.expire_date FROM store_app a, store_rent r WHERE r.appid_id = a.appid AND r.userid_id = %d;" % int(user.id))
+        app_list_purchased[i] += (is_reviewed, random_picture)
+    cursor.execute("SELECT a.appid, a.name, a.genre, a.icon, r.expire_date FROM store_app a, store_rent r WHERE r.appid_id = a.appid AND r.userid_id = %d;" % int(user.id))
     app_list_rent = cursor.fetchall()
     for i in range(len(app_list_rent)):
+        is_reviewed = is_rated(app_list_purchased[i][0], user.id)
         random_picture = str(random.randint(51,70))
-        app_list_rent[i] += (random_picture, )
-    '''
-    list_purchased = Purchased.objects.filter(userid_id = user.id)[:]
-    app_list_purchased = []
-    for purchase in list_purchased :
-        app_list_purchased.append(App.objects.get(appid = purchase.appid_id))
-
-    list_rent = Rent.objects.filter(userid_id = user.id)[:]
-    app_list_rent = []
-    for rent in list_rent :
-        app_list_rent.append(App.objects.get(appid = rent.appid_id))
-    
-    app_list = Purchased.objects.raw('SELECT * FROM store_purchased WHERE user= %s' , [user.username])
-
-    app_list.append(Rent.objects.raw('SELECT * FROM store_rent WHERE user= %s' , [user.username]))
-    '''
+        app_list_rent[i] += (is_reviewed, random_picture)
     context_dict['app_list_purchased'] = app_list_purchased
     context_dict['app_list_rent'] = app_list_rent
     search_form = SearchForm()
@@ -135,61 +121,46 @@ def password_change(request,user_name):
 
 def ProductPage(request, product_id):
     cursor = connection.cursor()
-
     app = App.objects.get(appid = product_id)
-    expire_date = False
-
     if request.user.is_authenticated():
-        user = User.objects.get(username = request.user.username)
-        username = request.user.username
-        
-        cursor.execute("SELECT COUNT(*) FROM store_purchased WHERE userid_id = %d AND appid_id =%d" % (int(user.id), int(product_id)))
-        num = cursor.fetchone()[0]
-        if num > 0 :
-            is_purchased = True
-        else :
-            is_purchased = False
-        
-        cursor.execute("SELECT COUNT(*) FROM store_rent WHERE userid_id = %d AND appid_id =%d" % (int(user.id), int(product_id)))
-        num = cursor.fetchone()[0]
-        if num > 0 :
-            is_rent = True
-            cursor.execute("SELECT expire_date FROM store_rent WHERE userid_id = %d AND appid_id =%d" % (int(user.id), int(product_id)))
-            expire_date = cursor.fetchone()[0]
-        else :
-            is_rent = False
+        userid = request.user.id
+        is_purchased = is_valid_purchase(product_id, userid)
+        is_rent = is_valid_rent(product_id, userid)
+        is_reviewed = is_rated(product_id, userid)  
     else :
         is_purchased = False
         is_rent = False
-    
-    random_picture = str(random.randint(51,70))
-    cursor.execute("SELECT COUNT(*), SUM(r.rating) FROM store_app a, store_rent r WHERE r.rating > 0 AND r.appid_id = a.appid AND a.appid = %d; " % int(product_id))
-    rent = cursor.fetchone()
-    cursor.execute("SELECT COUNT(*), SUM(p.rating) FROM store_app a, store_purchased p WHERE p.rating > 0 AND p.appid_id = a.appid AND a.appid = %d;" % int(product_id))
-    purchase = cursor.fetchone()
-    if rent[0]+purchase[0] == 0:
-        rating = 0
-    elif rent[0] == 0:
-        rating = int(int(purchase[1])/float(purchase[0]))
-    elif purchase[0] == 0:
-        rating = int(int(rent[1])/float(rent[0]))
-    else:
-        rating = int((int(rent[1]) + purchase[1])/float(rent[0]+purchase[0]))
-    stars = rating*"x";
-    feedbackForm = FeedbackForm()
-    cursor.execute("SELECT a.username, s.rating, s.review FROM store_purchased s, auth_user a WHERE s.appid_id = %d AND s.userid_id = a.id AND s.rating > 0" % int(product_id))
-    othersRating = cursor.fetchall()
-    app_data = (app.appid, app.name,app.purchase_price, app.rent_price,app.genre,app.device,app.release_date,app.description, app.icon, stars, random_picture)
-    search_form = SearchForm()
+        is_reviewed = False
 
+    expire_date = False
+    if is_rent:
+        cursor.execute("SELECT expire_date FROM store_rent WHERE userid_id = %d AND appid_id =%d" % (int(userid), int(product_id)))
+        expire_date = cursor.fetchone()[0]
+
+    random_picture = str(random.randint(51,70))
+    stars = calculate_rating(product_id)
+    app_data = (app.appid, app.name,app.purchase_price, app.rent_price,app.genre,app.device,app.release_date,app.description, app.icon, stars, random_picture)
+
+    cursor.execute("SELECT a.username, p.rating, p.review FROM store_purchased p, auth_user a WHERE p.appid_id = %d AND p.userid_id = a.id AND p.rating > 0" % int(product_id))
+    rating_entries_tuple = cursor.fetchall()
+    cursor.execute("SELECT a.username, r.rating, r.review FROM store_rent r, auth_user a WHERE r.appid_id = %d AND r.userid_id = a.id AND r.rating > 0" % int(product_id))
+    rating_entries_tuple += cursor.fetchall()
+
+    rating_entries = list()
+    for entry in rating_entries_tuple:
+        rating_entries.append((entry[0], int(entry[1])*"*", entry[2]))
+
+    
+    search_form = SearchForm()
+    feedbackForm = FeedbackForm()
     return render(request,'store/product.html',{'app_data':app_data,'purchased':is_purchased,'rent':is_rent,'expire_date':expire_date,
-                                                'feedbackForm':feedbackForm,'othersRating':othersRating, 'search_form': search_form})
+                                                'feedbackForm':feedbackForm,'rating_entries':rating_entries, 'search_form': search_form, 'reviewed': is_reviewed})
 
 def ProductPurchase(request, product_id):
     if request.user.is_authenticated():
         if request.method == 'POST':
-            userid = request.user.id;
-            orderid = ''.join(random.SystemRandom().choice(string.ascii_lowercase + string.digits) for _ in range(10));
+            userid = request.user.id
+            orderid = ''.join(random.SystemRandom().choice(string.ascii_lowercase + string.digits) for _ in range(10))
             cursor = connection.cursor()
             cursor.execute("INSERT INTO store_purchased(userid_id, order_id, appid_id) VALUES (%d, '%s', %d);" % (int(userid), orderid, int(product_id)))        
         return HttpResponseRedirect('/store/product/'+product_id)
@@ -199,9 +170,9 @@ def ProductPurchase(request, product_id):
 def ProductRent(request, product_id):
     if request.user.is_authenticated():
         if request.method == 'POST':
-            userid = request.user.id;
+            userid = request.user.id
             orderid = ''.join(random.SystemRandom().choice(string.ascii_lowercase + string.digits) for _ in range(10));
-            expire_date = (datetime.datetime.now()+datetime.timedelta(days=7)).strftime('%Y-%m-%d')
+            expire_date = (datetime.date.today()+datetime.timedelta(days=7)).strftime('%Y-%m-%d')
             cursor = connection.cursor()
             cursor.execute("INSERT INTO store_rent(userid_id, order_id, appid_id, expire_date) VALUES (%d, '%s', %d, '%s');" % (int(userid), orderid, int(product_id), expire_date))        
         return HttpResponseRedirect('/store/product/'+product_id)
@@ -212,7 +183,11 @@ def ProductFeedback(request, product_id):
     if request.method == 'POST':
         feedbackForm = FeedbackForm(request.POST)
         if feedbackForm.is_valid():
-            a = 1
+            userid = request.user.id
+            rating = feedbackForm.cleaned_data['rating']
+            review = feedbackForm.cleaned_data['review']
+            cursor = connection.cursor()
+            cursor.execute("UPDATE store_purchased SET rating = %d, review = '%s' WHERE userid_id = %d AND appid_id = %d;" % (int(rating), review, int(userid), int(product_id)))        
     return HttpResponseRedirect('/store/product/'+product_id)
 
 def ErrorPage(request):
@@ -228,6 +203,9 @@ def create_search(request):
             keywords = search_form.cleaned_data['keyword']
             genre = search_form.cleaned_data['types']
             rows_with_rating = list()
+            '''0-2: appid, name, purchase_price,  
+               3-5: genre, icon, stars,  
+               6-8: is_purchased, is_rent, random_picture'''
             cursor = connection.cursor()
             if genre=='all':
                 if keywords == '':
@@ -243,31 +221,18 @@ def create_search(request):
             #rating implementation
             for app in rows: #app is a tuple
                 appid = app[0]
-                random_picture = str(random.randint(51,70))
-                cursor.execute("SELECT COUNT(*), SUM(r.rating) FROM store_app a, store_rent r WHERE r.rating > 0 AND r.appid_id = a.appid AND a.appid = %d; " % int(appid))
-                rent = cursor.fetchone()
-                cursor.execute("SELECT COUNT(*), SUM(p.rating) FROM store_app a, store_purchased p WHERE p.rating > 0 AND p.appid_id = a.appid AND a.appid = %d;" % int(appid))
-                purchase = cursor.fetchone()
+                stars = calculate_rating(appid)
                 is_purchased = False
+                is_rent = False
                 if request.user.is_authenticated():
                     userid = request.user.id
-                    cursor.execute("SELECT COUNT(*) FROM store_purchased p WHERE p.appid_id = %d AND p.userid_id = %d;" % (int(appid), int(userid)))
-                    is_purchased = (cursor.fetchone()[0] == 1)
-                if rent[0]+purchase[0] == 0:
-                    rating = 0
-                elif rent[0] == 0:
-                    rating = int(int(purchase[1])/float(purchase[0]))
-                elif purchase[0] == 0:
-                    rating = int(int(rent[1])/float(rent[0]))
-                else:
-                    rating = int((int(rent[1]) + purchase[1])/float(rent[0]+purchase[0]))
-                stars = rating*"x";
-                rows_with_rating.append(app+(stars, is_purchased, random_picture))
+                    is_purchased = is_valid_purchase(appid, userid)
+                    is_rent = is_valid_rent(appid, userid)
+                random_picture = str(random.randint(51,70))
+                rows_with_rating.append(app+(stars, is_purchased, is_rent, random_picture))
             SearchDone = True
             return render(request,'store/search.html',
-                    {'search_form':search_form,'result':rows_with_rating,'SearchDone':SearchDone,
-                     'SearchName':keywords,
-                     'SearchGenre':genre})
+                    {'search_form':search_form,'result':rows_with_rating,'SearchDone':SearchDone})
     else:
         search_form = SearchForm()
         return render(request,'store/search.html',{'search_form':search_form})
@@ -295,3 +260,40 @@ def rate_review(request, user_name, orderid) :
 
     else:
         return render(request, 'store/review.html', context_dict)
+
+def is_valid_rent(appid, userid):
+    cursor = connection.cursor()
+    cursor.execute("SELECT r.expire_date FROM store_rent r WHERE r.appid_id = %d AND r.userid_id = %d;" % (int(appid), int(userid)))
+    for order in cursor.fetchall():
+        if datetime.date.today() < order[0]:
+            return True
+    return False
+
+def is_valid_purchase(appid, userid):
+    cursor = connection.cursor()
+    cursor.execute("SELECT COUNT(*) FROM store_purchased p WHERE p.appid_id = %d AND p.userid_id = %d;" % (int(appid), int(userid)))
+    return cursor.fetchone()[0] == 1
+
+def calculate_rating(appid):
+    cursor = connection.cursor()
+    cursor.execute("SELECT COUNT(*), SUM(r.rating) FROM store_rent r WHERE r.rating > 0 AND r.appid_id = %d; " % int(appid))
+    rent = cursor.fetchone()
+    cursor.execute("SELECT COUNT(*), SUM(p.rating) FROM store_purchased p WHERE p.rating > 0 AND p.appid_id = %d;" % int(appid))
+    purchase = cursor.fetchone()
+    if rent[0]+purchase[0] == 0:
+        rating = 0
+    elif rent[0] == 0:
+        rating = int(int(purchase[1])/float(purchase[0]))
+    elif purchase[0] == 0:
+        rating = int(int(rent[1])/float(rent[0]))
+    else:
+        rating = int((int(rent[1]) + purchase[1])/float(rent[0]+purchase[0]))
+    return rating*"x";
+
+def is_rated(appid, userid):
+    cursor = connection.cursor()
+    cursor.execute("SELECT COUNT(*) FROM store_rent r WHERE r.rating > 0 AND r.appid_id = %d AND r.userid_id = %d; " % (int(appid), int(userid)))
+    rent = cursor.fetchone()
+    cursor.execute("SELECT COUNT(*) FROM store_purchased p WHERE p.rating > 0 AND p.appid_id = %d AND p.userid_id = %d;" % (int(appid), int(userid)))
+    purchase = cursor.fetchone()
+    return rent[0]+purchase[0] > 0

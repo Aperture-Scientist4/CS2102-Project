@@ -134,12 +134,12 @@ http://www.templatemo.com/preview/templatemo_417_grill
                             <div class="col-md-3 col-sm-6 mix portfolio-item {{row.3}}">
                                 <div class="portfolio-wrapper">                
                                     <div class="portfolio-thumb">
-                                        <a href="/store/product/{{row.0}}/"><img src="{% if row.4 %}{{row.4}}{% else %}{% with 'store/images/'|add:row.7|add:'.png' as image_static %}{% static image_static %}{% endwith %}{% endif %}" alt="" /></a>
+                                        <a href="/store/product/{{row.0}}/"><img src="{% if row.4 %}{{row.4}}{% else %}{% with 'store/images/'|add:row.8|add:'.png' as image_static %}{% static image_static %}{% endwith %}{% endif %}" alt="" /></a>
                                     </div>  
                                     <div class="label-text">
                                         <h3><a href="/store/product/{{row.0}}/">{{row.1}}</a></h3>
                                         <p>{{row.3}}<span class="text-category">{% for i in row.5 %}&#9733;{% endfor %}</span>
-                                        {% if row.6 %}Purchased{% else %}<span class="text-category">${{row.2}}</span>{% endif %}</p>
+                                        {% if row.6 %}Purchased{% elif row.7%}Rent{% else %}<span class="text-category">${{row.2}}</span>{% endif %}</p>
                                     </div>
                                 </div>          
                             </div>

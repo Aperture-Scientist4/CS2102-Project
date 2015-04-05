@@ -102,10 +102,6 @@ http://www.templatemo.com/preview/templatemo_417_grill
                 </div>
             </div>
 
-
-
-
-
             <div id="product-post">
                 <div class="container">
                     <div id="single-blog" class="page-section first-section">
@@ -123,17 +119,18 @@ http://www.templatemo.com/preview/templatemo_417_grill
                                             </div>
                                             <div class="comments-title">
                                                 <div class="comment-section">
-                                                    <h4>{{ othersRating|length }} comments</h4>
+                                                    <h4>{{ rating_entries|length }} comments</h4>
                                                 </div>
                                             </div>
                                             <div class="all-comments">
-                                                {% if othersRating %}
-                                                    {% for row in othersRating %}
+                                                {% if rating_entries %}
+                                                    {% for row in rating_entries %}
+                                                        {{row.10}}
                                                         <div class="view-comments">
                                                             <div class="comments">
                                                                 <div class="comment-body">
                                                                     <h6>{{row.0}}</h6>
-                                                                    <span class="date">{{row.1}}</span>
+                                                                    <span class="date">{% for i in row.1 %}&#9733;{% endfor %}</span>
                                                                     {% if row.2 %}<p>{{row.2}}</p>{% endif %}
                                                                 </div>
                                                             </div>
@@ -142,24 +139,26 @@ http://www.templatemo.com/preview/templatemo_417_grill
                                                 {% else %}
                                                 {% endif %}
                                             </div>
-                                            {% if purchased or rent %}
+                                            {% if purchased or rent  %}
+                                            {% if not reviewed%}
                                                 <div class="leave-comment">
                                                     <div class="leave-one">
-                                                        <h4>Leave a comment</h4>
+                                                        <h4>Rate this product</h4>
                                                     </div>
                                                 </div>
                                                 <div class="leave-form">
                                                     <form action="/store/product/{{app_data.0}}/feedback/" method="post" class="leave-comment">
+                                                        {% csrf_token %}
                                                         <div class="row">
                                                         <div class="email col-md-4">
-                                                            <label>My rating: </label>{{feedbackForm.RatingBox}}
+                                                            <label>My rating: </label>{{feedbackForm.rating}}
                                                         </div>
                                                         
                                                         </div>
                                                         <div class="row">        
                                                             <div class="text col-md-12">
                                                                 <label>Review: </label>
-                                                                {{feedbackForm.FeedbackBox}}
+                                                                {{feedbackForm.review}}
                                                             </div>   
                                                         </div>                              
                                                         <div class="send">
@@ -168,9 +167,11 @@ http://www.templatemo.com/preview/templatemo_417_grill
                                                     </form>
                                                 </div>
                                             {% endif %}
+                                            {% endif %}
                                         </div>
                                         <div class="col-md-3 col-md-offset-1">
                                             <div class="side-bar">
+                                                {% if user.is_authenticated %}
                                                 <div class="news-letters">
                                                     <h4>Option</h4>
                                                     <div class="archives-list">
@@ -194,6 +195,7 @@ http://www.templatemo.com/preview/templatemo_417_grill
                                                         {% endif %}
                                                     </div>        
                                                 </div>
+                                                {% endif %}
                                                 <div class="recent-post">
                                                     <h4>Product Information</h4>
                                                     <div class="posts">
