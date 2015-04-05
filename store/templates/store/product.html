@@ -182,18 +182,15 @@ http://www.templatemo.com/preview/templatemo_417_grill
                                                         {% if purchased %}
                                                             <p>You have purchased this item.</p>
                                                         {% else %}
+                                                            <form action="/store/product/{{app_data.0}}/purchase/" method="post" onsubmit="return confirm('Confirm to make your payment?');">
+                                                                {% csrf_token %}
+                                                                <button type="submit" name="purchase" value="Purchase" class="btn btn-primary btn-block">Purchase for ${{app_data.2}}</button>
+                                                            </form>
                                                             {% if app_data.3 %}
                                                                 {% if rent %}
-                                                                    <form action="/store/product/{{app_data.0}}/purchase/" method="post" onsubmit="return confirm('Confirm to make your payment?');">
-                                                                    {% csrf_token %}
-                                                                    <button type="submit" name="purchase" value="Purchase" class="btn btn-default">Purchase</button>
-                                                                    </form>
                                                                     <p>Currently you have rented this item and it is due on {{expire_date}}.</p>
                                                                 {%else%}
-                                                                    <form action="/store/product/{{app_data.0}}/purchase/" method="post" onsubmit="return confirm('Confirm to make your payment?');">
-                                                                        {% csrf_token %}
-                                                                        <button type="submit" name="purchase" value="Purchase" class="btn btn-primary btn-block">Purchase for ${{app_data.2}}</button>
-                                                                    </form>
+                                                                    
                                                                     </br>
                                                                     <form action="/store/product/{{app_data.0}}/rent/" method="post" onsubmit="return confirm('Confirm to make your payment?');">
                                                                         {% csrf_token %}
