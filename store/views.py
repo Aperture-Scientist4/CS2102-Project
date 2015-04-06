@@ -29,7 +29,8 @@ def register(request):
             user.set_password(user.password)
             user.save()
             registered = True
-
+            if not redirect_to:
+                redirect_to = "/store/login/"
         else:
             print ("Error!")
     else:
@@ -48,8 +49,10 @@ def user_login(request):
 
         if user:
             login(request, user)
-            print(redirect_to)
-            return HttpResponseRedirect(redirect_to)
+            if(redirect_to):
+                return HttpResponseRedirect(redirect_to)
+            else:
+                return HttpResponseRedirect('/store/myaccount')
         else:
             return HttpResponse("Invalid login!")
 
