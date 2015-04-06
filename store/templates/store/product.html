@@ -119,7 +119,7 @@ http://www.templatemo.com/preview/templatemo_417_grill
                                             </div>
                                             <div class="comments-title">
                                                 <div class="comment-section">
-                                                    <h4>{{ rating_entries|length }} comments</h4>
+                                                    <h4>{{ rating_entries|length }} reviews</h4>
                                                 </div>
                                             </div>
                                             <div class="all-comments">
@@ -152,10 +152,9 @@ http://www.templatemo.com/preview/templatemo_417_grill
                                                         <div class="row">
                                                         <div class="email col-md-4">
                                                             {% for radio in feedback_form.rating %}
-                                                                <label for="{{ radio.id_for_label }}">
-                                                                    {{ radio.choice_label }}
-                                                                    {{ radio.tag }}
-                                                                </label>
+                                                            <div class="radio" style="width:40px; display:inline-block">
+                                                                    {{ radio }}
+                                                            </div>
                                                             {% endfor %}
                                                         </div>
                                                         
