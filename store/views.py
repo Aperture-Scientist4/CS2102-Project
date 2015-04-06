@@ -154,7 +154,7 @@ def ProductPage(request, product_id):
 
     
     search_form = SearchForm()
-    feedback_form = FeedbackForm()
+    feedback_form = FeedbackForm(initial={'rating': 4})
     return render(request,'store/product.html',{'app_data':app_data,'purchased':is_purchased,'rent':is_rent,'expire_date':expire_date,
                                                 'feedback_form':feedback_form,'rating_entries':rating_entries, 'search_form': search_form, 'reviewed': is_reviewed})
 @login_required(login_url='/store/login/')
