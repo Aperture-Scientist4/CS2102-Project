@@ -31,7 +31,7 @@ CREATE TABLE store_purchased(
 	appid INTEGER REFERENCES store_app(appid),
 	rating DECIMAL(2,1),
 	review VARCHAR(1024),
-	CHECK (rating<=5 AND rating>=0),
+	CHECK (rating<=5 AND rating>0),
 );
 
 CREATE TABLE store_rent(
@@ -41,7 +41,7 @@ CREATE TABLE store_rent(
 	rating DECIMAL(2,1),
 	review VARCHAR(1024),
 	expire_date DATE NOT NULL,
-	CHECK (rating<=5 AND rating>=0),
+	CHECK (rating<=5 AND rating>0),
 );
 
 
