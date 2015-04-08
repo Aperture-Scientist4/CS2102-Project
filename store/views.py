@@ -224,7 +224,7 @@ def create_search(request):
                 if keywords == '':
                     cursor.execute("SELECT a.appid, a.name, a.purchase_price, a.genre, a.icon FROM store_app a;")
                 else :
-                    cursor.execute("SELECT a.appid,a.name,a.purchase_price, a.genre, a.icon FROM store_app a WHERE (name LIKE '%s' OR description LIKE '%s');" % ('%'+keywords+'%','%'+keywords+'%'))
+                    cursor.execute("SELECT a.appid,a.name,a.purchase_price, a.genre, a.icon FROM store_app a WHERE (name LIKE '%s' OR description LIKE '%s');" % (keywords+'%','%'+keywords+'%'))
             else:
                 if keywords == '':
                     cursor.execute("SELECT a.appid, a.name, a.purchase_price, a.genre, a.icon FROM store_app a WHERE genre = '%s';" % genre)
