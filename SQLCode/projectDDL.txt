@@ -18,7 +18,6 @@ CREATE TABLE user(
 	username VARCHAR(30),
 	email VARCHAR(128),
 	password VARCHAR(128) NOT NULL,
-	is_staff BOOLEAN,
 	is_active BOOLEAN,
 	is_superuser BOOLEAN,
 	last_login DATE,
